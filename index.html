@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style templates/fonts.css">
+    
+    <title>Pokedex</title>
+</head>
+<body onload="init()">
+    <header>
+        <div class="headline-and-logo">
+            <h1 class="pokedex-main-headline">POKEDEX</h1>
+            <div class="logo-wrapper">
+                <img src="./assets/images/tumisu-pokemon-1530315_640.png" class="pokedex-logo" alt="logo">
+            </div>
+        </div>
+        <input type="text" name="pokemonName" id="pokemonName" data-id="search-button" placeholder="write your Pokemon here!">
+        <button onclick="loadPokemonData()" class="loading-btn" >Load Pokemon</button>
+    </header>
+    
+    <main data-id="content">
+        
+        <div class="pokemon-thumbnails-content" id="pokemon-thumbnails-content">
+            <img src="./assets/images/ekkant-loader-9342.gif" alt="loading spinner" class="loading-spinner">
+        </div>
+
+    
+        <dialog class="open_dialog closed_dialog" data-id="dialog" id="pokemon-dialog" class="pokemon-big-card" aria-describedby="dialog_description" closedby="any"> 
+            
+            <div id="pokemon-dialog-content" aria-controls="pokemon-dialog" class="pokemon-big-card">
+            
+            </div>
+        </dialog>
+
+        <button data-id="load-more-button" class="loading-btn" onclick="loadNextPokemons()">Load more Pokemons</button>
+    </main>
+
+</body>
+<script src="./script.js"></script>
+</html>

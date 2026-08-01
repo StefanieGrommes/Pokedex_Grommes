@@ -1,0 +1,201 @@
+const BASE_URL = "https://pokeapi.co/api/v2/";
+const limit = 36;
+const offset = 0;
+let pokemonArray = [];
+let currentIndex = 0;
+
+function init(){
+    fetchData();
+}
+
+async function fetchData(){
+    let responseToJson;
+    try {
+        let response = await fetch (`${BASE_URL}pokemon?limit=${limit}&offset=${offset}`);
+        if (!response.ok){
+        throw new Error("Trouble loading Pokemons! Reload Site!")
+        }
+        responseToJson = await response.json();
+        }
+    catch(error) {
+        console.error(error);
+        return;
+    }
+    getDetails(responseToJson);
+}
+
+async function getDetails(responseToJson){
+    let pokemonArray = responseToJson.results;
+    let pokemonDetails = [];
+    const promises = pokemonArray.map(async(pokemon) => { //map erstellt ein neues Array, wo alle Daten gleichzeitig gefetched werden
+        const pokemonResponse = await fetch (pokemon.url);
+        return await pokemonResponse.json();
+        });
+        pokemonDetails = await Promise.all(promises); //Promise.all wartet, bis alle promises fertig sind 
+        renderPokemons(pokemonDetails);
+}
+
+function renderPokemons(pokemonDetails){
+    let thumbnailRef = document.getElementById("pokemon-thumbnails-content");  
+    thumbnailRef.innerHTML = "";
+        for (let index = 0; index < pokemonDetails.length; index++) {
+        thumbnailRef.innerHTML+= getTemplateSmallPokemonCard(index);
+        renderSmallPokemonCard(pokemonDetails, index);
+        pokemonArray.push(pokemonDetails[index]);
+        }
+        console.log(pokemonArray[5].name)
+    }
+
+function getTemplateSmallPokemonCard(index){
+    return `<button onclick="openPokemonDialog(${index})" data-id="card" id="thumbnail" class="small-pokemon-card">
+                <h1 id="pokemon-name-${index}" class="pokemon-name"></h1>
+                <span id="pokemon-id-${index}" class="pokemon-id-btn">#</span> 
+                <div class="sprites-wrapper">
+                    <img src="" alt="Pokemon Sprite" data-id="card-image" id="pokemon-sprite-${index}" class="small-pokemon-sprite-img" style="display:none">
+                </div>
+                <div class="pokemon-type">
+                    <span id="pokemon-type1-${index}" class="pokemon-type-btn"></span>
+                    <span id="pokemon-type2-${index}" class="pokemon-type-btn"></span> 
+                </div>
+            </button>`
+}
+
+function renderSmallPokemonCard(pokemonDetails, index){
+    
+    let pokemonSprite = document.getElementById(`pokemon-sprite-${index}`);
+    pokemonSprite.src = pokemonDetails[index].sprites.other["official-artwork"].front_default;
+    pokemonSprite.style = "display: block";
+    let pokemonName = document.getElementById(`pokemon-name-${index}`);
+    pokemonName.innerHTML += (pokemonDetails[index].name.charAt(0).toUpperCase() + pokemonDetails[index].name.slice(1));
+    let pokemonType1 = document.getElementById(`pokemon-type1-${index}`);
+    let pokemonType2 = document.getElementById(`pokemon-type2-${index}`);
+    pokemonType1.innerHTML += pokemonDetails[index].types[0].type.name;
+        if (pokemonDetails[index].types[1]){
+            pokemonType2.innerHTML = pokemonDetails[index].types[1].type.name;
+        } else {
+            pokemonType2.style.display = "none";
+        }
+    let pokemonID = document.getElementById(`pokemon-id-${index}`);
+    pokemonID.innerHTML += pokemonDetails[index].id;
+    return pokemonDetails;   
+}
+
+//DIALOG
+
+
+let myDialog = document.getElementById("pokemon-dialog");
+
+function openPokemonDialog(index){
+    currentIndex = index;
+    myDialog.showModal();
+    myDialog.classList.add("opened");
+    document.body.classList.add("no-scroll");
+    getTemplateBigPokemonCard(index);
+    renderBigPokemonCard(index);
+    
+}
+
+let dialogContent= document.getElementById("pokemon-dialog-content");
+function getTemplateBigPokemonCard(index){
+    dialogContent.innerHTML=`  <div class="header_dialog"> 
+                                <h2 data-id="overlay-pokemon-name" id="pokemon-dialog-name-${index}"></h2>
+                                <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn"></span>
+                                <div class="pokemon-type">
+                                    <span id="pokemon-dialog-type1-${index}" class="pokemon-type-btn"></span>
+                                    <span id="pokemon-dialog-type2-${index}" class="pokemon-type-btn"></span> 
+                                </div>
+                                <button class="close-dialog-btn" onclick="closeDialog(${currentIndex})" data-id="close-dialog-button"> X </button> 
+                                <div class="sprites-wrapper">
+                                        <img src="" alt="Pokemon Sprite" data-id="big-card-image" id="pokemon-dialog-sprite-${index}" class="big-pokemon-sprite-img">
+                                </div>
+                            </div>
+                            <div class="dialog_body">
+                                <table>
+                                    <button onclick="showPokemonStats(${index})"><b>About</button>
+                                    <button onclick="showPokemonEvolution(${index})"><b>Stats</button>
+                                    <button onclick="showPokemonMoves(${index})"><b>Moves</button>
+                                    <tr><td></td></tr>
+                                    <tr><td>Attack</td></tr>
+                                </table>
+                            </div> 
+                            <div class="footer_dialog"> 
+                                    <button class="arrow" onclick="previousCard(${index})" data-id="prev-button">&larr;</button>
+                                    <button class="arrow" onclick="nextCard(${index})" data-id="next-button">&rarr;</button>
+                            </div>
+                            `
+}
+
+
+
+function renderBigPokemonCard(index){
+    let pokemonDialogSprite = document.getElementById(`pokemon-dialog-sprite-${index}`);
+    pokemonDialogSprite.src = pokemonArray[index].sprites.other["official-artwork"].front_default;
+    pokemonDialogSprite.style = "display: block";
+    let pokemonDialogName = document.getElementById(`pokemon-dialog-name-${index}`);
+    pokemonName.innerHTML += pokemonArray[index].name;
+    let pokemonDialogType1 = document.getElementById(`pokemon-dialog-type1-${index}`);
+    let pokemonDialogType2 = document.getElementById(`pokemon-dialog-type2-${index}`);
+    pokemonDialogType1.innerHTML += pokemonArray[index].types[0].type.name;
+        if (pokemonArray[index].types[1]){
+            pokemonDialogType2.innerHTML = pokemonArray[index].types[1].type.name;
+        } else {
+            pokemonDialogType2.style.display = "none";
+        }
+    let pokemonDialogID = document.getElementById(`pokemon-dialog-id-${index}`);
+    pokemonDialogID.innerHTML += pokemonArray[index].id;
+      
+
+
+
+
+
+}
+
+/* function getPokemonStats(pokemonDetails, index){
+    for (let i = 0; i < pokemonDetails[index]stats.length; index++) {
+        const stat = array[index];
+        
+    }
+}*/
+
+  
+function closeDialog() {
+    myDialog.close();
+    myDialog.classList.remove("opened");
+    document.body.classList.remove("no-scroll");
+}
+
+
+function nextCard(index) { 
+    index = currentIndex;
+    currentIndex++;
+    if(currentIndex>= pokemonArray.length) {
+        currentIndex = 0;
+    }
+    renderBigPokemonCard(index);
+    getTemplateBigPokemonCard(index);
+} 
+
+function previousCard(index) {
+    index = currentIndex;
+    currentIndex--;
+    if(currentIndex< 0) {
+        currentIndex = (pokemonArray.length)-1;};
+     renderBigPokemonCard(index);
+    getTemplateBigPokemonCard(index);
+}
+
+//DIALOG ENDE CHECKEN
+
+async function loadPokemonData(){
+    let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase();
+    // hier noch prüfen, ob pokemon name schon angezeigt wird, ansonsten rendern 
+    let response = await fetch(BASE_URL + "pokemon/" + pokemonNameInput);
+    let responseToJson = await response.json();
+    renderPokemonCard(responseToJson);
+}
+
+
+
+
+
