@@ -50,7 +50,7 @@ function renderPokemons(pokemonDetails){
     thumbnailRef.innerHTML = "";
     }
         for (let index = 0; index < pokemonDetails.length; index++) { 
-            let pokemonArrayIndex = pokemonArray.length;
+            let pokemonArrayIndex = pokemonArray.length; //definiert globale Position im Array
             thumbnailRef.innerHTML+= getTemplateSmallPokemonCard(pokemonArrayIndex);
         renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex);
         pokemonArray.push(pokemonDetails[index]);
