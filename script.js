@@ -8,7 +8,7 @@ function init(){
     fetchData(offset); 
 }
 
-async function fetchData(offset){ //allgemein mache mit offset und limit?
+async function fetchData(offset){ 
     let responseToJson;
     try {
         let response = await fetch (`${BASE_URL}pokemon?limit=${limit}&offset=${offset}`);
@@ -34,9 +34,9 @@ function showError(message){
 }
 
 async function getDetails(responseToJson){
-    let pokemonArray = responseToJson.results;
+    let pokemonResults = responseToJson.results;
     let pokemonDetails = [];
-    const promises = pokemonArray.map(async(pokemon) => { //map erstellt ein neues Array, wo alle Daten gleichzeitig gefetched werden
+    const promises = pokemonResults.map(async(pokemon) => { //map erstellt ein neues Array, wo alle Daten gleichzeitig gefetched werden
         const pokemonResponse = await fetch (pokemon.url);
         return await pokemonResponse.json();
         });
@@ -50,12 +50,11 @@ function renderPokemons(pokemonDetails){
     thumbnailRef.innerHTML = "";
     }
         for (let index = 0; index < pokemonDetails.length; index++) { 
-            let pokemonArrayIndex = pokemonArray.length; //definiert globale Position im Array
+            let pokemonArrayIndex = pokemonArray.length; //definiert globale Position im Array, beim ersten pokemon im Loop ist length 0, erst nach dem pushen ist es 1;
             thumbnailRef.innerHTML+= getTemplateSmallPokemonCard(pokemonArrayIndex);
         renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex);
         pokemonArray.push(pokemonDetails[index]);
         }
-    pokemonArray.push(pokemonDetails[index]);
     }
 
 function getTemplateSmallPokemonCard(index){
@@ -174,38 +173,39 @@ function closeDialog() {
     document.body.classList.remove("no-scroll");
 }
 
-async function loadMorePokemons(){
-    
+async function loadMorePokemons(){   
     offset +=limit;
     fetchData(offset);
 }
 
 async function searchPokemon(){
-    let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase();
-    await fetchSinglePokemon(pokemonNameInput);
-    let cards = document.querySelectorAll(".small-pokemon-card"); //selektiere alle small Cards
-    cards.forEach((card, index) => { //prüfe für jede karte, ob das if statement stimmt
-        if (pokemonArray[index].name.includes(pokemonNameInput)){
-            card.style.display = "block"
+let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase();
+    if (pokemonNameInput.length < 3){
+        alert ("Please type in at least 3 Characters");
+            return;
+        }
+    let existingPokemon = pokemonArray.filter(pokemon =>//filter gibt immer Array zurück
+        pokemon.name.includes(pokemonNameInput));
+    let cards = document.querySelectorAll(".small-pokemon-card");
+    cards.forEach(card => card.style.display = "none"); // alle Karten einmal ausblenden
+
+        if (existingPokemon.length > 0) {  //wenn das Array nicht leer ist, dann 
+        existingPokemon.forEach(pokemon =>{  // suche den index aller pokemons im großen PokemonArray und setze ihn gleich dem Index
+        let index = pokemonArray.indexOf(pokemon);
+        showPokemonCard(index,cards);
+            });
         } else {
-            card.style.display = "none";
-            }
-        });
-    }
-    
-async function fetchSinglePokemon(pokemonNameInput){
-    try {
-        let response = await fetch(BASE_URL + "pokemon/" + pokemonNameInput);
-        if(!response.ok) {
-            throw new Error("Could not find Pokemon. Try again");
-            }
-            let pokemon = await response.json();
-            pokemonNameInput.innerHTML = "";
-    } catch(error) {
-        showError(error.message);
-        return;
-    }
+            alert ("No pokemon matches your search");
+        }
 }
+
+function showPokemonCard(index, cards){
+    cards[index].style.display = "flex"; // nur die mit richtigem Index anzeigen lassen
+}
+            
+    
+    
+
     
     
 

@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="search-pokemon-section">
-            <input type="text" class="input-search-pokemon" name="pokemonName" id="pokemonName" data-id="search-button" placeholder="write your Pokemon here!">
+            <input type="text" class="input-search-pokemon" name="pokemonName" id="pokemonName" data-id="search-button" placeholder="write your Pokemon here!" minlength="3" required>
             <button onclick="searchPokemon()" class="loading-btn" >Load Pokemon</button>
         </div>
     </header>
@@ -40,7 +40,9 @@
             </div>
         </dialog>
 
-        <button data-id="load-more-button" id="loading-more-pokemons" class="loading-btn more-pokemon-btn" onclick="loadMorePokemons()">Load more Pokemons</button>
+        <div id="load-more-section">
+            <button data-id="load-more-button" id="loading-more-pokemons" class="loading-btn more-pokemon-btn" onclick="loadMorePokemons()">Load more Pokemons</button>
+        </div>
     </main>
 
 </body>
