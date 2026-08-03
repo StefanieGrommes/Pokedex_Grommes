@@ -16,14 +16,20 @@
                 <img src="./assets/images/tumisu-pokemon-1530315_640.png" class="pokedex-logo" alt="logo">
             </div>
         </div>
-        <input type="text" name="pokemonName" id="pokemonName" data-id="search-button" placeholder="write your Pokemon here!">
-        <button onclick="loadPokemonData()" class="loading-btn" >Load Pokemon</button>
+        <div class="search-pokemon-section">
+            <input type="text" class="input-search-pokemon" name="pokemonName" id="pokemonName" data-id="search-button" placeholder="write your Pokemon here!">
+            <button onclick="searchPokemon()" class="loading-btn" >Load Pokemon</button>
+        </div>
     </header>
     
     <main data-id="content">
+
+        <div id="error-message" class="error-wrapper">
+            
+        </div>
         
         <div class="pokemon-thumbnails-content" id="pokemon-thumbnails-content">
-            <img src="./assets/images/ekkant-loader-9342.gif" alt="loading spinner" class="loading-spinner">
+            <img src="./assets/images/ekkant-loader-9342.gif" id="loading-spinner" alt="loading spinner" class="loading-spinner">
         </div>
 
     
@@ -34,7 +40,7 @@
             </div>
         </dialog>
 
-        <button data-id="load-more-button" class="loading-btn" onclick="loadNextPokemons()">Load more Pokemons</button>
+        <button data-id="load-more-button" id="loading-more-pokemons" class="loading-btn more-pokemon-btn" onclick="loadMorePokemons()">Load more Pokemons</button>
     </main>
 
 </body>

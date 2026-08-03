@@ -1,14 +1,14 @@
 const BASE_URL = "https://pokeapi.co/api/v2/";
 const limit = 36;
-const offset = 0;
+let offset = 0;
 let pokemonArray = [];
 let currentIndex = 0;
 
 function init(){
-    fetchData();
+    fetchData(offset); 
 }
 
-async function fetchData(){
+async function fetchData(offset){ //allgemein mache mit offset und limit?
     let responseToJson;
     try {
         let response = await fetch (`${BASE_URL}pokemon?limit=${limit}&offset=${offset}`);
@@ -18,10 +18,19 @@ async function fetchData(){
         responseToJson = await response.json();
         }
     catch(error) {
-        console.error(error);
+        showError(error.message);
         return;
     }
     getDetails(responseToJson);
+}
+
+function showError(message){
+    const errorMessage = document.getElementById("error-message");
+    errorMessage.innerHTML = `<span class="error-text">ERROR</span>
+                            <p class="error-message-content">${message}</p>
+                            <button onclick="init()" class="loading-btn">Restart</button>` 
+    const loadMoreBtn = document.getElementById("loading-more-pokemons");
+    loadMoreBtn.style.display="none";
 }
 
 async function getDetails(responseToJson){
@@ -36,14 +45,17 @@ async function getDetails(responseToJson){
 }
 
 function renderPokemons(pokemonDetails){
-    let thumbnailRef = document.getElementById("pokemon-thumbnails-content");  
+    let thumbnailRef = document.getElementById("pokemon-thumbnails-content");
+    if(offset === 0){
     thumbnailRef.innerHTML = "";
-        for (let index = 0; index < pokemonDetails.length; index++) {
-        thumbnailRef.innerHTML+= getTemplateSmallPokemonCard(index);
-        renderSmallPokemonCard(pokemonDetails, index);
+    }
+        for (let index = 0; index < pokemonDetails.length; index++) { 
+            let pokemonArrayIndex = pokemonArray.length;
+            thumbnailRef.innerHTML+= getTemplateSmallPokemonCard(pokemonArrayIndex);
+        renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex);
         pokemonArray.push(pokemonDetails[index]);
         }
-        console.log(pokemonArray[5].name)
+    pokemonArray.push(pokemonDetails[index]);
     }
 
 function getTemplateSmallPokemonCard(index){
@@ -60,22 +72,21 @@ function getTemplateSmallPokemonCard(index){
             </button>`
 }
 
-function renderSmallPokemonCard(pokemonDetails, index){
-    
-    let pokemonSprite = document.getElementById(`pokemon-sprite-${index}`);
+function renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex){
+    let pokemonSprite = document.getElementById(`pokemon-sprite-${pokemonArrayIndex}`);
     pokemonSprite.src = pokemonDetails[index].sprites.other["official-artwork"].front_default;
     pokemonSprite.style = "display: block";
-    let pokemonName = document.getElementById(`pokemon-name-${index}`);
+    let pokemonName = document.getElementById(`pokemon-name-${pokemonArrayIndex}`);
     pokemonName.innerHTML += (pokemonDetails[index].name.charAt(0).toUpperCase() + pokemonDetails[index].name.slice(1));
-    let pokemonType1 = document.getElementById(`pokemon-type1-${index}`);
-    let pokemonType2 = document.getElementById(`pokemon-type2-${index}`);
+    let pokemonType1 = document.getElementById(`pokemon-type1-${pokemonArrayIndex}`);
+    let pokemonType2 = document.getElementById(`pokemon-type2-${pokemonArrayIndex}`);
     pokemonType1.innerHTML += pokemonDetails[index].types[0].type.name;
         if (pokemonDetails[index].types[1]){
             pokemonType2.innerHTML = pokemonDetails[index].types[1].type.name;
         } else {
             pokemonType2.style.display = "none";
         }
-    let pokemonID = document.getElementById(`pokemon-id-${index}`);
+    let pokemonID = document.getElementById(`pokemon-id-${pokemonArrayIndex}`);
     pokemonID.innerHTML += pokemonDetails[index].id;
     return pokemonDetails;   
 }
@@ -125,8 +136,6 @@ function getTemplateBigPokemonCard(index){
                             `
 }
 
-
-
 function renderBigPokemonCard(index){
     let pokemonDialogSprite = document.getElementById(`pokemon-dialog-sprite-${index}`);
     pokemonDialogSprite.src = pokemonArray[index].sprites.other["official-artwork"].front_default;
@@ -165,8 +174,43 @@ function closeDialog() {
     document.body.classList.remove("no-scroll");
 }
 
+async function loadMorePokemons(){
+    
+    offset +=limit;
+    fetchData(offset);
+}
 
-function nextCard(index) { 
+async function searchPokemon(){
+    let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase();
+    await fetchSinglePokemon(pokemonNameInput);
+    let cards = document.querySelectorAll(".small-pokemon-card"); //selektiere alle small Cards
+    cards.forEach((card, index) => { //prüfe für jede karte, ob das if statement stimmt
+        if (pokemonArray[index].name.includes(pokemonNameInput)){
+            card.style.display = "block"
+        } else {
+            card.style.display = "none";
+            }
+        });
+    }
+    
+async function fetchSinglePokemon(pokemonNameInput){
+    try {
+        let response = await fetch(BASE_URL + "pokemon/" + pokemonNameInput);
+        if(!response.ok) {
+            throw new Error("Could not find Pokemon. Try again");
+            }
+            let pokemon = await response.json();
+            pokemonNameInput.innerHTML = "";
+    } catch(error) {
+        showError(error.message);
+        return;
+    }
+}
+    
+    
+
+
+/* function nextCard(index) { 
     index = currentIndex;
     currentIndex++;
     if(currentIndex>= pokemonArray.length) {
@@ -185,17 +229,11 @@ function previousCard(index) {
     getTemplateBigPokemonCard(index);
 }
 
-//DIALOG ENDE CHECKEN
-
-async function loadPokemonData(){
-    let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase();
-    // hier noch prüfen, ob pokemon name schon angezeigt wird, ansonsten rendern 
-    let response = await fetch(BASE_URL + "pokemon/" + pokemonNameInput);
-    let responseToJson = await response.json();
-    renderPokemonCard(responseToJson);
-}
 
 
 
 
+
+
+*/
 

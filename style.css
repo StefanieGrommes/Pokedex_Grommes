@@ -1,5 +1,5 @@
 :root {
-  
+  --main-headline-color: rgb(165, 165, 225);
 }
 
 
@@ -58,17 +58,34 @@ header {
 .pokedex-main-headline{
     font-family: 'Londrina Shadow', sans-serif;
     font-size: 72px;
-    color:rgb(165, 165, 225);
+    color:var(--main-headline-color);
     margin: 0;
 }
 
-.loading-btn {
-    width: 180px;
+.search-pokemon-section { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    
+}
+
+.input-search-pokemon {
+    width: 240px;
     height: 48px;
     font-size: 18px;
-    
-
+    text-align: center;
 }
+
+.loading-btn {
+    width: 160px;
+    height: 32px;
+    font-size: 16px;
+    font-weight: 800;
+    background-color:rgb(165, 165, 225);
+}
+
+
 
 /* ------->MAIN------------------------------*/
 
@@ -87,6 +104,22 @@ main {
     height: auto;
 }
 
+.error-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--main-headline-color);
+    margin: 36px 0 36px 0;
+}
+
+.error-message-content{
+    font-size: 24px;
+}
+
+.error-text{
+    font-size: 32px;
+    
+}
 .pokemon-thumbnails-content {
     display: flex;
     flex-wrap: wrap;
@@ -109,8 +142,11 @@ main {
 .small-pokemon-card:hover  {
     transform: scale(1.05);
     background-color: rgba(255, 251, 0, 0.7);
+}
 
-
+.pokemon-name {
+    font-family: 'Londrina Shadow';
+    font-size: 32px;
 }
 
 .sprites-wrapper {
@@ -196,5 +232,14 @@ dialog.opened::backdrop {
 .arrow {
     font-family:'Londrina Shadow', sans-serif;
     font-size: 32px;
+}
+
+.more-pokemon-btn {
+    width: 160px;
+    height: 48px;
+    display: flex;
+    justify-self: center;
+    margin-top: 32px;
+    margin-bottom: 32px;
 }
 /* ------->FOOTER------------------------------*/
