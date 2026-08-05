@@ -26,7 +26,7 @@ async function fetchData(offset){
 
 function showError(message){
     const errorMessage = document.getElementById("error-message");
-    errorMessage.innerHTML = `<span class="error-text">ERROR</span>
+    errorMessage.innerHTML = `<span class="error-text" data-id="not-found">ERROR</span>
                             <p class="error-message-content">${message}</p>
                             <button onclick="init()" class="loading-btn">Restart</button>` 
     const loadMoreBtn = document.getElementById("loading-more-pokemons");
@@ -57,16 +57,14 @@ function renderPokemons(pokemonDetails){
         }
     }
 
-function getTemplateSmallPokemonCard(index){
-    return `<button onclick="openPokemonDialog(${index})" data-id="card" id="thumbnail" class="small-pokemon-card">
-                <h1 id="pokemon-name-${index}" class="pokemon-name"></h1>
-                <span id="pokemon-id-${index}" class="pokemon-id-btn">#</span> 
-                <div class="sprites-wrapper">
-                    <img src="" alt="Pokemon Sprite" data-id="card-image" id="pokemon-sprite-${index}" class="small-pokemon-sprite-img" style="display:none">
+function getTemplateSmallPokemonCard(pokemonArrayIndex){
+    return `<button onclick="openPokemonDialog(${pokemonArrayIndex})" data-id="card" id="thumbnail" class="small-pokemon-card">
+                <h1 id="pokemon-name-${pokemonArrayIndex}" class="pokemon-name" ></h1>
+                <span id="pokemon-id-${pokemonArrayIndex}" class="pokemon-id-btn">#</span> 
+                <div class="sprites-wrapper" id="sprites-bg-${pokemonArrayIndex}">
+                    <img src="" alt="Pokemon Sprite" data-id="card-image" id="pokemon-sprite-${pokemonArrayIndex}" class="small-pokemon-sprite-img" style="display:none">
                 </div>
-                <div class="pokemon-type">
-                    <span id="pokemon-type1-${index}" class="pokemon-type-btn"></span>
-                    <span id="pokemon-type2-${index}" class="pokemon-type-btn"></span> 
+                <div id="pokemon-type-${pokemonArrayIndex}" class="pokemon-type">
                 </div>
             </button>`
 }
@@ -77,18 +75,20 @@ function renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex){
     pokemonSprite.style = "display: block";
     let pokemonName = document.getElementById(`pokemon-name-${pokemonArrayIndex}`);
     pokemonName.innerHTML += (pokemonDetails[index].name.charAt(0).toUpperCase() + pokemonDetails[index].name.slice(1));
-    let pokemonType1 = document.getElementById(`pokemon-type1-${pokemonArrayIndex}`);
-    let pokemonType2 = document.getElementById(`pokemon-type2-${pokemonArrayIndex}`);
-    pokemonType1.innerHTML += pokemonDetails[index].types[0].type.name;
-        if (pokemonDetails[index].types[1]){
-            pokemonType2.innerHTML = pokemonDetails[index].types[1].type.name;
-        } else {
-            pokemonType2.style.display = "none";
-        }
+    let pokemonTypeContainer = document.getElementById(`pokemon-type-${pokemonArrayIndex}`);
+    pokemonTypeContainer.innerHTML = "";
+    pokemonDetails[index].types.forEach(type => {
+        pokemonTypeContainer.innerHTML += 
+        `<span class="pokemon-type-btn">${type.type.name}</span>`;
+        });
+    pokemonDetails[index].types.forEach(type => {
+        pokemonSprite.classList.add(`pokemon-type-${type.type.name}`);
+        });
     let pokemonID = document.getElementById(`pokemon-id-${pokemonArrayIndex}`);
     pokemonID.innerHTML += pokemonDetails[index].id;
     return pokemonDetails;   
 }
+
 
 //DIALOG
 
@@ -107,26 +107,33 @@ function openPokemonDialog(index){
 
 let dialogContent= document.getElementById("pokemon-dialog-content");
 function getTemplateBigPokemonCard(index){
-    dialogContent.innerHTML=`  <div class="header_dialog"> 
-                                <h2 data-id="overlay-pokemon-name" id="pokemon-dialog-name-${index}"></h2>
-                                <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn"></span>
-                                <div class="pokemon-type">
-                                    <span id="pokemon-dialog-type1-${index}" class="pokemon-type-btn"></span>
-                                    <span id="pokemon-dialog-type2-${index}" class="pokemon-type-btn"></span> 
+    dialogContent.innerHTML=`  <div class="header-dialog"> 
+                                    <div class="pokemon-dialog-name-wrapper">
+                                        <h2 data-id="overlay-pokemon-name" id="pokemon-dialog-name-${index}" class="pokemon-dialog-name"></h2>
+                                    </div>
+                                    <div class="second-line-pokemon-dialog">
+                                        <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn big-id"></span>
+                                        <button class="close-dialog-btn" onclick="closeDialog(${currentIndex})" data-id="close-dialog-button"> X </button> 
+                                    </div>
+                                    <div class="pokemon-type pokemon-dialog-type" id="pokemon-dialog-type-${index}">
+                                    </div>
                                 </div>
-                                <button class="close-dialog-btn" onclick="closeDialog(${currentIndex})" data-id="close-dialog-button"> X </button> 
                                 <div class="sprites-wrapper">
                                         <img src="" alt="Pokemon Sprite" data-id="big-card-image" id="pokemon-dialog-sprite-${index}" class="big-pokemon-sprite-img">
                                 </div>
-                            </div>
                             <div class="dialog_body">
-                                <table>
+                                <div class="table-headline">
                                     <button onclick="showPokemonStats(${index})"><b>About</button>
                                     <button onclick="showPokemonEvolution(${index})"><b>Stats</button>
                                     <button onclick="showPokemonMoves(${index})"><b>Moves</button>
-                                    <tr><td></td></tr>
-                                    <tr><td>Attack</td></tr>
-                                </table>
+                                </div>
+                                        <div class="stats-content" id="stats-content">
+                                            
+                                            </div>
+
+
+                                        
+                                    </div>
                             </div> 
                             <div class="footer_dialog"> 
                                     <button class="arrow" onclick="previousCard(${index})" data-id="prev-button">&larr;</button>
@@ -140,32 +147,20 @@ function renderBigPokemonCard(index){
     pokemonDialogSprite.src = pokemonArray[index].sprites.other["official-artwork"].front_default;
     pokemonDialogSprite.style = "display: block";
     let pokemonDialogName = document.getElementById(`pokemon-dialog-name-${index}`);
-    pokemonName.innerHTML += pokemonArray[index].name;
-    let pokemonDialogType1 = document.getElementById(`pokemon-dialog-type1-${index}`);
-    let pokemonDialogType2 = document.getElementById(`pokemon-dialog-type2-${index}`);
-    pokemonDialogType1.innerHTML += pokemonArray[index].types[0].type.name;
-        if (pokemonArray[index].types[1]){
-            pokemonDialogType2.innerHTML = pokemonArray[index].types[1].type.name;
-        } else {
-            pokemonDialogType2.style.display = "none";
-        }
+    pokemonDialogName.innerHTML += (pokemonArray[index].name.charAt(0).toUpperCase() + pokemonArray[index].name.slice(1));
+    let pokemonDialogTypeContainer = document.getElementById(`pokemon-dialog-type-${index}`);
+    pokemonDialogTypeContainer.innerHTML = "";
+    pokemonArray[index].types.forEach(type => {
+        pokemonDialogTypeContainer.innerHTML += 
+        `<span class="pokemon-type-btn">${type.type.name}</span>`;
+        });
+    pokemonArray[index].types.forEach(type => {
+        pokemonDialogSprite.classList.add(`pokemon-type-${type.type.name}`)
+    });
     let pokemonDialogID = document.getElementById(`pokemon-dialog-id-${index}`);
-    pokemonDialogID.innerHTML += pokemonArray[index].id;
-      
-
-
-
-
-
+    pokemonDialogID.innerHTML += "#" + pokemonArray[index].id;
+    getPokemonStats(index);
 }
-
-/* function getPokemonStats(pokemonDetails, index){
-    for (let i = 0; i < pokemonDetails[index]stats.length; index++) {
-        const stat = array[index];
-        
-    }
-}*/
-
   
 function closeDialog() {
     myDialog.close();
@@ -202,38 +197,50 @@ let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase(
 function showPokemonCard(index, cards){
     cards[index].style.display = "flex"; // nur die mit richtigem Index anzeigen lassen
 }
+
+
+function getPokemonStats(index){
+    let statsTableContainer = document.getElementById("stats-content");
+    let pokemonStatsArray = pokemonArray[index].stats;
+    pokemonStatsArray.forEach(pokemonStat => {
+       statsTableContainer.innerHTML += `<div class="stat-row">
+                                                <span class="stat-name">${pokemonStat.stat.name}</span>
+                                                <span class="stat-value">${pokemonStat.base_stat}</span>
+                                                <div class="stat-bar-background">
+                                                    <div class="stat-bar-fill" style="width: ></div>
+                                                </div>`
+    })
+    
+}
+
             
+ function nextCard(index) { 
     
-    
-
-    
-    
-
-
-/* function nextCard(index) { 
-    index = currentIndex;
-    currentIndex++;
-    if(currentIndex>= pokemonArray.length) {
-        currentIndex = 0;
+    index++;
+    if(index >= pokemonArray.length) {
+        index = 0;
     }
-    renderBigPokemonCard(index);
     getTemplateBigPokemonCard(index);
+    renderBigPokemonCard(index);
 } 
 
 function previousCard(index) {
-    index = currentIndex;
-    currentIndex--;
-    if(currentIndex< 0) {
-        currentIndex = (pokemonArray.length)-1;};
-     renderBigPokemonCard(index);
+    
+    index--;
+    if(index < 0) {
+        index = (pokemonArray.length)-1;};
     getTemplateBigPokemonCard(index);
+    renderBigPokemonCard(index);
 }
 
 
+// erst auf species URL fetchen, dann auf evolution_chain 
+// 1. sprite :  chain.species.url
+//2. sprite : chain.evolves_to[0].species.url     davon URL fetchen
+// 3.sprite: chain.evolves_to[0].evolves_to.species.url
 
 
 
 
 
-*/
 
