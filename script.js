@@ -107,14 +107,16 @@ function openPokemonDialog(index){
 
 let dialogContent= document.getElementById("pokemon-dialog-content");
 function getTemplateBigPokemonCard(index){
-    dialogContent.innerHTML=`  <div class="header-dialog"> 
+    dialogContent.innerHTML= ` <div class="close-btn-wrapper">
+                                    <button class="close-dialog-btn" onclick="closeDialog(${currentIndex})" data-id="close-dialog-button"> X </button> 
+                                </div>
+                                <div class="header-dialog"> 
                                     <div class="pokemon-dialog-name-wrapper">
                                         <h2 data-id="overlay-pokemon-name" id="pokemon-dialog-name-${index}" class="pokemon-dialog-name"></h2>
+                                        <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn big-id"></span>
+                                    </div>
                                     </div>
                                     <div class="second-line-pokemon-dialog">
-                                        <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn big-id"></span>
-                                        <button class="close-dialog-btn" onclick="closeDialog(${currentIndex})" data-id="close-dialog-button"> X </button> 
-                                    </div>
                                     <div class="pokemon-type pokemon-dialog-type" id="pokemon-dialog-type-${index}">
                                     </div>
                                 </div>
@@ -123,16 +125,13 @@ function getTemplateBigPokemonCard(index){
                                 </div>
                             <div class="dialog_body">
                                 <div class="table-headline">
-                                    <button onclick="showPokemonStats(${index})"><b>About</button>
-                                    <button onclick="showPokemonEvolution(${index})"><b>Stats</button>
+                                    <button onclick="showPokemonStats(${index})"><b>Stats</button>
+                                    <button onclick="renderPokemonAbout(${index})"><b>About</button>
                                     <button onclick="showPokemonMoves(${index})"><b>Moves</button>
                                 </div>
                                         <div class="stats-content" id="stats-content">
                                             
                                             </div>
-
-
-                                        
                                     </div>
                             </div> 
                             <div class="footer_dialog"> 
@@ -199,23 +198,44 @@ function showPokemonCard(index, cards){
 }
 
 
-function getPokemonStats(index){
+function showPokemonStats(index){
     let statsTableContainer = document.getElementById("stats-content");
+    statsTableContainer.innerHTML = "";
+    statsTableContainer.classList.add("column");
     let pokemonStatsArray = pokemonArray[index].stats;
     pokemonStatsArray.forEach(pokemonStat => {
        statsTableContainer.innerHTML += `<div class="stat-row">
                                                 <span class="stat-name">${pokemonStat.stat.name}</span>
-                                                <span class="stat-value">${pokemonStat.base_stat}</span>
+                                                <span class="stat-value"><b>${pokemonStat.base_stat}</span>
                                                 <div class="stat-bar-background">
                                                     <div class="stat-bar-fill" style="width: ></div>
                                                 </div>`
-    })
-    
+    })  
+}
+function renderPokemonAbout(index){
+    let pokemonAbilitiesArray = pokemonArray[index].abilities.map(
+        pokemonAbility => pokemonAbility.ability.name);
+    let statsTableContainer = document.getElementById("stats-content");
+    statsTableContainer.innerHTML = "";
+    statsTableContainer.classList.add("column");
+    statsTableContainer.innerHTML += `<table class="table-about">
+                                                <tr> <td> weight: ${pokemonArray[index].weight} kg </td> </tr>
+                                                <tr> <td> height: ${pokemonArray[index].height} m</td> </tr>
+                                                <tr> <td> Abilty: ${pokemonAbilitiesArray.join(", ")}</td></tr>
+                                                </table>` 
 }
 
-            
+function showPokemonMoves(index){
+    let statsTableContainer = document.getElementById("stats-content");
+    statsTableContainer.innerHTML = "";
+    statsTableContainer.classList.remove("column");
+    statsTableContainer.classList.add("moves-btn-container");
+    pokemonArray[index].moves.forEach(pokemonMove => {
+        statsTableContainer.innerHTML += `<button class="moves-btn">${pokemonMove.move.name}</button>`
+    });
+}
+
  function nextCard(index) { 
-    
     index++;
     if(index >= pokemonArray.length) {
         index = 0;
@@ -225,20 +245,12 @@ function getPokemonStats(index){
 } 
 
 function previousCard(index) {
-    
     index--;
     if(index < 0) {
         index = (pokemonArray.length)-1;};
     getTemplateBigPokemonCard(index);
     renderBigPokemonCard(index);
 }
-
-
-// erst auf species URL fetchen, dann auf evolution_chain 
-// 1. sprite :  chain.species.url
-//2. sprite : chain.evolves_to[0].species.url     davon URL fetchen
-// 3.sprite: chain.evolves_to[0].evolves_to.species.url
-
 
 
 
