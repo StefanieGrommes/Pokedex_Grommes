@@ -158,7 +158,7 @@ function renderBigPokemonCard(index){
     });
     let pokemonDialogID = document.getElementById(`pokemon-dialog-id-${index}`);
     pokemonDialogID.innerHTML += "#" + pokemonArray[index].id;
-    getPokemonStats(index);
+    showPokemonStats(index);
 }
   
 function closeDialog() {

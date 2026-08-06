@@ -268,6 +268,11 @@ h2 {
     font-size: 32px;
 }
 
+.dialog-body {
+    width: 100%;
+    height: 50%;
+}
+
 .moves-btn-container {
     display: flex;
     flex-wrap: wrap;
@@ -298,8 +303,17 @@ h2 {
 .stats-content {
     display: flex;
     color: black;
-    width: 100%;
-    height: 40dvh;
+    width: auto;
+    height: min(50vh, 800px);
+}
+
+/*progress bar*/
+.stat-bar-background{
+    width: 20%;
+    height: 18px;
+    color: yellow;
+    border-width: 4px;
+    border-color: blue;
 }
 
 .column {
@@ -311,9 +325,19 @@ h2 {
     border-radius: 10%;
 }
 
+.footer_dialog {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    top: -40px;
+    gap: 8px;
+
+}
+
 .arrow {
     font-family:'Londrina Shadow', sans-serif;
     font-size: 32px;
+    
 }
 
 .more-pokemon-btn {
