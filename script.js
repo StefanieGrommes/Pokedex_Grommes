@@ -205,10 +205,10 @@ function showPokemonStats(index){
     let pokemonStatsArray = pokemonArray[index].stats;
     pokemonStatsArray.forEach(pokemonStat => {
        statsTableContainer.innerHTML += `<div class="stat-row">
-                                                <span class="stat-name">${pokemonStat.stat.name}</span>
+                                                <span class="stat-name">${pokemonStat.stat.name.charAt(0).toUpperCase() + pokemonStat.stat.name.slice(1)}</span>
                                                 <span class="stat-value"><b>${pokemonStat.base_stat}</span>
                                                 <div class="stat-bar-background">
-                                                    <div class="stat-bar-fill" style="width: ></div>
+                                                    <div class="stat-bar-fill"></div>
                                                 </div>`
     })  
 }
@@ -219,8 +219,8 @@ function renderPokemonAbout(index){
     statsTableContainer.innerHTML = "";
     statsTableContainer.classList.add("column");
     statsTableContainer.innerHTML += `<table class="table-about">
-                                                <tr> <td> weight: ${pokemonArray[index].weight} kg </td> </tr>
-                                                <tr> <td> height: ${pokemonArray[index].height} m</td> </tr>
+                                                <tr> <td> Weight: ${pokemonArray[index].weight} kg </td> </tr>
+                                                <tr> <td> Height: ${pokemonArray[index].height} m</td> </tr>
                                                 <tr> <td> Abilty: ${pokemonAbilitiesArray.join(", ")}</td></tr>
                                                 </table>` 
 }
@@ -230,9 +230,16 @@ function showPokemonMoves(index){
     statsTableContainer.innerHTML = "";
     statsTableContainer.classList.remove("column");
     statsTableContainer.classList.add("moves-btn-container");
-    pokemonArray[index].moves.forEach(pokemonMove => {
-        statsTableContainer.innerHTML += `<button class="moves-btn">${pokemonMove.move.name}</button>`
-    });
+        if (pokemonArray[index].moves.length <= 25){
+            pokemonArray[index].moves.forEach(pokemonMove => {
+            statsTableContainer.innerHTML += `<button class="moves-btn">${pokemonMove.move.name}</button>`
+            });
+        } else {
+            for (let i = 0; i < 26; i++){
+                const pokemonMove = pokemonArray[index].moves[i]; 
+                statsTableContainer.innerHTML += `<button class="moves-btn">${pokemonMove.move.name}</button>`
+        }
+    }
 }
 
  function nextCard(index) { 
