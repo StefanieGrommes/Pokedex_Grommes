@@ -5,8 +5,21 @@ let pokemonArray = [];
 let currentIndex = 0;
 
 function init(){
+    showLoadingSpinner();
     fetchData(offset); 
+    
 }
+
+function showLoadingSpinner(){
+    const loadingContainer = document.getElementById("loading-container");
+    loadingContainer.style.display = "flex";
+}
+
+function hideLoadingSpinner(){
+    const loadingContainer = document.getElementById("loading-container");
+    loadingContainer.style.display = "none";
+}
+
 
 async function fetchData(offset){ 
     let responseToJson;
@@ -40,8 +53,9 @@ async function getDetails(responseToJson){
         const pokemonResponse = await fetch (pokemon.url);
         return await pokemonResponse.json();
         });
-        pokemonDetails = await Promise.all(promises); //Promise.all wartet, bis alle promises fertig sind 
-        renderPokemons(pokemonDetails);
+    pokemonDetails = await Promise.all(promises); //Promise.all wartet, bis alle promises fertig sind 
+    renderPokemons(pokemonDetails);
+    hideLoadingSpinner();
 }
 
 function renderPokemons(pokemonDetails){
@@ -112,8 +126,10 @@ function getTemplateBigPokemonCard(index){
                                 </div>
                                 <div class="header-dialog"> 
                                     <div class="pokemon-dialog-name-wrapper">
-                                        <h2 data-id="overlay-pokemon-name" id="pokemon-dialog-name-${index}" class="pokemon-dialog-name"></h2>
-                                        <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn big-id"></span>
+                                        <h2 id="pokemon-dialog-name-${index}" class="pokemon-dialog-name"></h2>
+                                        <div class="pokemon-id-container">
+                                            <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn big-id"></span>
+                                        </div>
                                     </div>
                                     </div>
                                     <div class="second-line-pokemon-dialog">
@@ -121,13 +137,13 @@ function getTemplateBigPokemonCard(index){
                                     </div>
                                 </div>
                                 <div class="sprites-wrapper">
-                                        <img src="" alt="Pokemon Sprite" data-id="big-card-image" id="pokemon-dialog-sprite-${index}" class="big-pokemon-sprite-img">
+                                        <img src="" alt="Pokemon Sprite" data-id="dialog-image" id="pokemon-dialog-sprite-${index}" class="big-pokemon-sprite-img">
                                 </div>
-                            <div class="dialog_body">
+                            <div class="dialog-body">
                                 <div class="table-headline">
-                                    <button onclick="showPokemonStats(${index})"><b>Stats</button>
-                                    <button onclick="renderPokemonAbout(${index})"><b>About</button>
-                                    <button onclick="showPokemonMoves(${index})"><b>Moves</button>
+                                    <button onclick="showPokemonStats(${index})"><b>Stats</b></button>
+                                    <button onclick="renderPokemonAbout(${index})"><b>About</b></button>
+                                    <button onclick="showPokemonMoves(${index})"><b>Moves</b></button>
                                 </div>
                                         <div class="stats-content" id="stats-content">
                                             
@@ -169,11 +185,12 @@ function closeDialog() {
 
 async function loadMorePokemons(){   
     offset +=limit;
-    fetchData(offset);
+    init();
 }
 
 async function searchPokemon(){
-let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase();
+let inputField = document.getElementById("pokemonName");
+let pokemonNameInput = inputField.value.toLowerCase();
     if (pokemonNameInput.length < 3){
         alert ("Please type in at least 3 Characters");
             return;
@@ -182,33 +199,41 @@ let pokemonNameInput = document.getElementById("pokemonName").value.toLowerCase(
         pokemon.name.includes(pokemonNameInput));
     let cards = document.querySelectorAll(".small-pokemon-card");
     cards.forEach(card => card.style.display = "none"); // alle Karten einmal ausblenden
-
         if (existingPokemon.length > 0) {  //wenn das Array nicht leer ist, dann 
         existingPokemon.forEach(pokemon =>{  // suche den index aller pokemons im großen PokemonArray und setze ihn gleich dem Index
         let index = pokemonArray.indexOf(pokemon);
         showPokemonCard(index,cards);
             });
         } else {
-            alert ("No pokemon matches your search");
+            let errorMessage = document.getElementById("error-no-pokemon-found");
+            errorMessage.style.display="block";
         }
+inputField.value = "";
+setTimeout(function(){
+    let errorMessage = document.getElementById("error-no-pokemon-found");
+    errorMessage.style.display = "none";
+    init();
+ }, 3000)
+
 }
 
 function showPokemonCard(index, cards){
     cards[index].style.display = "flex"; // nur die mit richtigem Index anzeigen lassen
 }
 
-
 function showPokemonStats(index){
     let statsTableContainer = document.getElementById("stats-content");
     statsTableContainer.innerHTML = "";
+    statsTableContainer.classList.remove("moves-btn-container");
     statsTableContainer.classList.add("column");
     let pokemonStatsArray = pokemonArray[index].stats;
     pokemonStatsArray.forEach(pokemonStat => {
-       statsTableContainer.innerHTML += `<div class="stat-row">
+        let value = pokemonStat.base_stat;
+        statsTableContainer.innerHTML += `<div class="stat-row">
                                                 <span class="stat-name">${pokemonStat.stat.name.charAt(0).toUpperCase() + pokemonStat.stat.name.slice(1)}</span>
-                                                <span class="stat-value"><b>${pokemonStat.base_stat}</span>
+                                                <span class="stat-value"><b>${value}</b></span>
                                                 <div class="stat-bar-background">
-                                                    <div class="stat-bar-fill"></div>
+                                                    <div class="stat-bar-fill" style="width:${value}%"></div>
                                                 </div>`
     })  
 }
@@ -217,11 +242,14 @@ function renderPokemonAbout(index){
         pokemonAbility => pokemonAbility.ability.name);
     let statsTableContainer = document.getElementById("stats-content");
     statsTableContainer.innerHTML = "";
+    statsTableContainer.classList.remove("moves-btn-container");
     statsTableContainer.classList.add("column");
     statsTableContainer.innerHTML += `<table class="table-about">
-                                                <tr> <td> Weight: ${pokemonArray[index].weight} kg </td> </tr>
-                                                <tr> <td> Height: ${pokemonArray[index].height} m</td> </tr>
-                                                <tr> <td> Abilty: ${pokemonAbilitiesArray.join(", ")}</td></tr>
+                                                <tr> <td> <b> Weight:</b> ${pokemonArray[index].weight} kg </td> </tr>
+                                                <tr> <td> <b> Height: </b> ${pokemonArray[index].height} m</td> </tr>
+                                                <tr> <td> <b> Abilty: </b> ${pokemonAbilitiesArray.join(", ")}</td></tr>
+                                                <tr> <td> <b> Base Experience: </b> ${pokemonArray[index]["base_experience"]}</td></tr>
+                                                <tr> <td> <b> Order: </b> ${pokemonArray[index].order}</td></tr>
                                                 </table>` 
 }
 

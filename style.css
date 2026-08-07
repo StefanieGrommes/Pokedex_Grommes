@@ -67,7 +67,14 @@ header {
     flex-direction: column;
     align-items: center;
     gap: 4px;
-    
+}
+
+#error-no-pokemon-found {
+    align-items: center;
+    justify-content: center;
+    margin-top: 24px;
+    font-size: 24px;
+    color: var(--main-headline-color);
 }
 
 .input-search-pokemon {
@@ -97,6 +104,12 @@ main {
     padding: 120px 24px 0 24px;
     flex: 1;
    
+}
+
+.laoding-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .loading-spinner{
@@ -183,8 +196,10 @@ main {
 /* ------->DIALOG------------------------------*/
 
 .pokemon-big-card {
-    width: min(80vw, 700px);
-    max-height: 75dvh;
+    display:flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
     margin: auto;
     padding: 0px;
     border: 6px solid azure;
@@ -192,15 +207,20 @@ main {
     color: white;
     box-sizing: border-box;
     overscroll-behavior: contain;
-    background-color: rgba(233, 202, 23, 0.6);
+    background-color: rgba(233, 202, 23, 1);
 }
 
 #pokemon-dialog {
+    border: none;
+    padding: 0;
+    background: transparent;
     transition: all 125ms ease-in-out;
     transform: translateX(50px);
+    width: min(80vw, 700px);
+    max-height: 75dvh;
 }
 
-#pokemon-dialog.opened {
+dialog.opened {
     transform: translateX(0px);
     transition: all 125ms ease-in-out;
 }
@@ -235,6 +255,7 @@ dialog.opened::backdrop {
 .header-dialog {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
 }
 
@@ -244,6 +265,7 @@ dialog.opened::backdrop {
     align-items: center;
     gap: 12px;
     margin: 12px;
+    white-space: nowrap;
 }
 
 h2 {
@@ -262,15 +284,25 @@ h2 {
     color: black;
 }
 
+.pokemon-id-container {
+    width: 100%;
+}
+
 .big-id {
-    width: 64px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     height: 48px;
+    min-width: 70px;
+    padding: 10px;
     font-size: 32px;
 }
 
 .dialog-body {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 50%;
+    height: 30dvh;
 }
 
 .moves-btn-container {
@@ -305,32 +337,58 @@ h2 {
 
 .table-headline {
     display: flex;
-    padding: 12px;
+    justify-content: center;
+    flex-shrink: 0;
+    gap: 12px;
+    margin-bottom: 12px;
+    margin-top: 12px;
+}
+
+.table-about {
+    font-size: 18px;
 }
 
 .stats-content {
-    display: flex;
-    width: 100%;
-    height: min(30vh, 300px);
+    height: 320px;
+    width: 600px;
     padding: 12px;
     color: black;
-    background-color: white;
+    background-color: rgb(255, 242, 122);
+    border-radius: 8px;
 }
 
 /*progress bar*/
+
 .stat-bar-background{
-    width: 20%;
-    height: 18px;
-    color: yellow;
-    border-width: 4px;
-    border-color: blue;
+    width: 100%;
+    height: 14px;
+    border-radius: 10px;
+    overflow: hidden;
+    background-color: #d6d6d6
+}
+
+.stat-bar-fill {
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        rgb(5, 238, 5),
+        rgba(7, 18, 230, 0.8)
+    );
+    border-radius: 10px;
+    transition: width 0.5s ease;
 }
 
 .column {
     flex-direction: column;
+    justify-content: start;
 }
 
 .stat-row {
+    display: grid;
+    grid-template-columns: 100px 40px 1fr;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
     border-width: 4px;
     border-radius: 10%;
 }
@@ -338,10 +396,8 @@ h2 {
 .footer_dialog {
     display: flex;
     justify-content: center;
-    position: relative;
-    top: -40px;
+    margin-top: 16px;
     gap: 8px;
-
 }
 
 .arrow {

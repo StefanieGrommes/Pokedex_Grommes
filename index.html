@@ -19,28 +19,36 @@
             </div>
         </div>
         <div class="search-pokemon-section">
-            <input type="text" class="input-search-pokemon" name="pokemonName" id="pokemonName" data-id="search-button" placeholder="write your Pokemon here!" minlength="3" required>
+            <input type="text" class="input-search-pokemon" name="pokemonName" id="pokemonName" data-id="search-input" placeholder="write your Pokemon here!" minlength="3" required>
             <button onclick="searchPokemon()" class="loading-btn" >Load Pokemon</button>
+            <p id="error-no-pokemon-found" style="display:none"><b>ERROR:</b><br>No Pokemon found!</p>
         </div>
     </header>
     
     <main data-id="content">
 
-        <div id="error-message" class="error-wrapper">
+        <div id="error-message" class="error-wrapper" data-id="not-found">
             
-        </div>
-        
-        <div class="pokemon-thumbnails-content" id="pokemon-thumbnails-content">
-            <img src="./assets/images/ekkant-loader-9342.gif" id="loading-spinner" alt="loading spinner" class="loading-spinner">
         </div>
 
-    
-        <dialog class="open_dialog closed_dialog" data-id="dialog" id="pokemon-dialog" class="pokemon-big-card" aria-describedby="dialog_description" closedby="any"> 
+        
+
+        <div class="pokemon-thumbnails-content" id="pokemon-thumbnails-content">
             
-            <div id="pokemon-dialog-content" aria-controls="pokemon-dialog" class="pokemon-big-card">
+        </div>
+
+        <div id="loading-container" class="laoding-container">
+            <img src="./assets/images/ekkant-loader-9342.gif" id="loading-spinner" alt="loading spinner" class="loading-spinner"></img>
+        </div>
+    
+        <dialog data-id="dialog" id="pokemon-dialog" closedby="any">
+           
+            
+            <div id="pokemon-dialog-content" data-id="overlay-pokemon-name" aria-controls="pokemon-dialog" class="pokemon-big-card">
             
             </div>
         </dialog>
+        
 
         <div id="load-more-section">
             <button data-id="load-more-button" id="loading-more-pokemons" class="loading-btn more-pokemon-btn" onclick="loadMorePokemons()">Load more Pokemons</button>
