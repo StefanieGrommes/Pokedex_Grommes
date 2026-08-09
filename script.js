@@ -169,7 +169,10 @@ function showNoPokemonFound(){
 setTimeout(function(){
     let errorMessage = document.getElementById("error-no-pokemon-found");
     errorMessage.style.display = "none";
-    init();
+    let cards = document.querySelectorAll(".small-pokemon-card");
+        cards.forEach(card => {
+            card.style.display = "flex";
+        });
  }, 3000)
 }
 }
@@ -205,11 +208,11 @@ function renderPokemonMoves(index){
     statsTableContainer.innerHTML = "";
     statsTableContainer.classList.remove("column");
     statsTableContainer.classList.add("moves-btn-container");
-        if (pokemonArray[index].moves.length <= 25){
+        if (pokemonArray[index].moves.length <= 20){
             pokemonArray[index].moves.forEach(pokemonMove => {statsTableContainer.innerHTML += showPokemonMoves(pokemonMove);
             });
         } else {
-            for (let i = 0; i < 26; i++){
+            for (let i = 0; i < 19; i++){
                 const pokemonMove = pokemonArray[index].moves[i]; 
                 statsTableContainer.innerHTML += showPokemonMoves(pokemonMove);
             }

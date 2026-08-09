@@ -212,14 +212,13 @@ main {
     padding: 0;
     background: transparent;
     transition: all 125ms ease-in-out;
-    transform: translateX(50px);
     width: min(80vw, 700px);
-    max-height: 75dvh;
+    max-height: 80dvh;
+    transition: opacity 125ms ease-in-out;
 }
 
 dialog.opened {
-    transform: translateX(0px);
-    transition: all 125ms ease-in-out;
+    opacity: 1;
 }
 
 dialog::backdrop {
@@ -297,6 +296,7 @@ h2 {
 .dialog-body {
     display: flex;
     flex-direction: column;
+    align-items: center;
     width: 100%;
     height: 30dvh;
 }
@@ -309,7 +309,6 @@ h2 {
     height: 100%;
     width: 100%;
     gap: 8px;
-    margin: 12px;
 }
 
 .moves-btn {
@@ -346,8 +345,8 @@ h2 {
 
 .stats-content {
     height: 320px;
-    width: 600px;
-    padding: 20px;
+    width: 100%;
+    padding: 12px;
     color: black;
     background-color: rgb(255, 242, 122);
     border-radius: 8px;
@@ -455,20 +454,90 @@ h2 {
     }
 }
 
+@media(max-width: 850px) {
+    #pokemon-dialog {
+        width: min(70vw, 620px);
+    }
+    #pokemon-dialog-content {
+        padding: 18px 22px 18px 22px;
+    }
+    .stats-content {
+        width: 60vw;
+    }
+}
+
  @media(max-width: 610px) {
     header {
         height: 265px;
     }
     main {
-        padding: 120px 8px 0px 8px;
+        padding: 30px 8px 0px 8px;
     }  
     .headline-and-logo {
         flex-direction: column;
     }
+    .pokemon-thumbnails-content {
+        gap: 10px;
+    }
+    .moves-btn {
+        height: 28px;
+    }
+
 }
+
+@media(max-width: 578px){
+    main {
+        padding: 12px 8px 0px 8px;;
+    }
+    .small-pokemon-card {
+        width: max(200px, 40%);
+    }
+    .moves-btn {
+        height: 24px;
+    }
+}
+
+@media(max-width: 500px){
+    .moves-btn {
+        height: 18px;
+        gap: 4px;
+    }
+    .pokemon-dialog-name {
+        font-size: 36px;
+    }
+    .big-id {
+        height: 36px;
+    }
+}
+
+@media(max-width: 400px){
+    .pokemon-dialog-name {
+        font-size: 28px;
+    }
+    .big-id {
+        height: 28px;
+        font-size: 24px;
+    }
+    .big-pokemon-sprite-img {
+    height: 180px;
+    }
+    .stat-row {
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+    }
+    .stat-bar-background {
+        display: none;
+    }
+    .moves-btn {
+        height: 16px;
+    }
+}
+
 
 @media(max-width: 320px){
     main {
         padding: 0;
     }
+
 }
