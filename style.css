@@ -2,7 +2,6 @@
   --main-headline-color: rgb(165, 165, 225);
 }
 
-
 *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -92,8 +91,6 @@ header {
     background-color:rgb(165, 165, 225);
 }
 
-
-
 /* ------->MAIN------------------------------*/
 
 main {  
@@ -102,8 +99,7 @@ main {
     margin: 0 auto;
     box-sizing: border-box;
     padding: 120px 24px 0 24px;
-    flex: 1;
-   
+    flex: 1;   
 }
 
 .laoding-container {
@@ -133,6 +129,7 @@ main {
     font-size: 32px;
     
 }
+
 .pokemon-thumbnails-content {
     display: flex;
     flex-wrap: wrap;
@@ -243,7 +240,6 @@ dialog.opened::backdrop {
     height: 100%;
     padding: 24px 28px 24px 28px;
     box-sizing: border-box;
-    /* overflow-y: auto; */
 }
 
 .close-btn-wrapper{
@@ -351,13 +347,15 @@ h2 {
 .stats-content {
     height: 320px;
     width: 600px;
-    padding: 12px;
+    padding: 20px;
     color: black;
     background-color: rgb(255, 242, 122);
     border-radius: 8px;
 }
 
-/*progress bar*/
+.stat-name {
+    white-space: nowrap;
+}
 
 .stat-bar-background{
     width: 100%;
@@ -414,6 +412,7 @@ h2 {
     margin-top: 32px;
     margin-bottom: 32px;
 }
+
 /* ------->FOOTER------------------------------*/
 
 .footer-wrapper {
@@ -434,11 +433,42 @@ h2 {
 
 .footer-img-wrapper {
     width: 40px;
-    height: 40px;
-    
+    height: 40px;   
 }
 
 .footer-img {
     width: 100%;
     object-fit: cover; 
+}
+
+/* ------->MEDIA QUERIES------------------------------*/
+
+@media(max-width: 1580px){
+    main {
+        padding: 120px 18px 0px 18px;
+    }
+}
+
+@media(max-width: 1000px){
+    main {
+        padding: 120px 12px 0px 12px;
+    }
+}
+
+ @media(max-width: 610px) {
+    header {
+        height: 265px;
+    }
+    main {
+        padding: 120px 8px 0px 8px;
+    }  
+    .headline-and-logo {
+        flex-direction: column;
+    }
+}
+
+@media(max-width: 320px){
+    main {
+        padding: 0;
+    }
 }

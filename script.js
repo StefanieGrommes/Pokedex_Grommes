@@ -29,19 +29,17 @@ async function fetchData(offset){
         responseToJson = await response.json();
         }
     catch(error) {
-        showError(error.message);
+        renderError(error.message);
         return;
     }
     getDetails(responseToJson);
 }
 
-function showError(message){
+function renderError(message){
     const errorMessage = document.getElementById("error-message");
-    errorMessage.innerHTML = `<span class="error-text" data-id="not-found">ERROR</span>
-                            <p class="error-message-content">${message}</p>
-                            <button onclick="init()" class="loading-btn">Restart</button>` 
     const loadMoreBtn = document.getElementById("loading-more-pokemons");
     loadMoreBtn.style.display="none";
+    errorMessage.innerHTML += showErrorMessage(message); 
 }
 
 async function getDetails(responseToJson){
@@ -101,7 +99,8 @@ function openPokemonDialog(index){
     myDialog.showModal();
     myDialog.classList.add("opened");
     document.body.classList.add("no-scroll");
-    getTemplateBigPokemonCard(index);
+    let dialogContent= document.getElementById("pokemon-dialog-content");
+    dialogContent.innerHTML = getTemplateBigPokemonCard(index);
     renderBigPokemonCard(index);
 }
 
@@ -198,53 +197,44 @@ function renderPokemonAbout(index){
     statsTableContainer.innerHTML = "";
     statsTableContainer.classList.remove("moves-btn-container");
     statsTableContainer.classList.add("column");
-    statsTableContainer.innerHTML += `<table class="table-about">
-                                                <tr> <td> <b> Weight:</b> ${pokemonArray[index].weight} kg </td> </tr>
-                                                <tr> <td> <b> Height: </b> ${pokemonArray[index].height} m</td> </tr>
-                                                <tr> <td> <b> Abilty: </b> ${pokemonAbilitiesArray.join(", ")}</td></tr>
-                                                <tr> <td> <b> Base Experience: </b> ${pokemonArray[index]["base_experience"]}</td></tr>
-                                                <tr> <td> <b> Order: </b> ${pokemonArray[index].order}</td></tr>
-                                                </table>` 
+    statsTableContainer.innerHTML += showPokemonAbout(index, pokemonAbilitiesArray);
 }
 
-
-/// DIESE 2 ZEILEN NOCH AUSLAGERN IN TEMPLATES"
-
-
-
-
-function showPokemonMoves(index){
+function renderPokemonMoves(index){
     let statsTableContainer = document.getElementById("stats-content");
     statsTableContainer.innerHTML = "";
     statsTableContainer.classList.remove("column");
     statsTableContainer.classList.add("moves-btn-container");
         if (pokemonArray[index].moves.length <= 25){
-            pokemonArray[index].moves.forEach(pokemonMove => {
-            statsTableContainer.innerHTML += `<button class="moves-btn">${pokemonMove.move.name}</button>`
+            pokemonArray[index].moves.forEach(pokemonMove => {statsTableContainer.innerHTML += showPokemonMoves(pokemonMove);
             });
         } else {
             for (let i = 0; i < 26; i++){
                 const pokemonMove = pokemonArray[index].moves[i]; 
-                statsTableContainer.innerHTML += `<button class="moves-btn">${pokemonMove.move.name}</button>`
+                statsTableContainer.innerHTML += showPokemonMoves(pokemonMove);
+            }
         }
-    }
 }
 
- function nextCard(index) { 
-    index++;
-    if(index >= pokemonArray.length) {
-        index = 0;
+ function nextCard(){ 
+    currentIndex++;
+    if(currentIndex >= pokemonArray.length) {
+        currentIndex = 0;
     }
-    getTemplateBigPokemonCard(index);
-    renderBigPokemonCard(index);
+    renderCurrentPokemon();
 } 
 
-function previousCard(index) {
-    index--;
-    if(index < 0) {
-        index = (pokemonArray.length)-1;};
-    getTemplateBigPokemonCard(index);
-    renderBigPokemonCard(index);
+function previousCard(){
+    currentIndex--;
+    if(currentIndex < 0) {
+        currentIndex = (pokemonArray.length)-1;};
+    renderCurrentPokemon();
+}
+
+function renderCurrentPokemon(){
+    let dialogContent = document.getElementById("pokemon-dialog-content");
+    dialogContent.innerHTML = getTemplateBigPokemonCard(currentIndex);
+    renderBigPokemonCard(currentIndex);
 }
 
 
