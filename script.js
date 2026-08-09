@@ -6,8 +6,7 @@ let currentIndex = 0;
 
 function init(){
     showLoadingSpinner();
-    fetchData(offset); 
-    
+    fetchData(offset);    
 }
 
 function showLoadingSpinner(){
@@ -19,7 +18,6 @@ function hideLoadingSpinner(){
     const loadingContainer = document.getElementById("loading-container");
     loadingContainer.style.display = "none";
 }
-
 
 async function fetchData(offset){ 
     let responseToJson;
@@ -69,43 +67,32 @@ function renderPokemons(pokemonDetails){
         renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex);
         pokemonArray.push(pokemonDetails[index]);
         }
-    }
-
-function getTemplateSmallPokemonCard(pokemonArrayIndex){
-    return `<button onclick="openPokemonDialog(${pokemonArrayIndex})" data-id="card" id="thumbnail" class="small-pokemon-card">
-                <h1 id="pokemon-name-${pokemonArrayIndex}" class="pokemon-name" ></h1>
-                <span id="pokemon-id-${pokemonArrayIndex}" class="pokemon-id-btn">#</span> 
-                <div class="sprites-wrapper" id="sprites-bg-${pokemonArrayIndex}">
-                    <img src="" alt="Pokemon Sprite" data-id="card-image" id="pokemon-sprite-${pokemonArrayIndex}" class="small-pokemon-sprite-img" style="display:none">
-                </div>
-                <div id="pokemon-type-${pokemonArrayIndex}" class="pokemon-type">
-                </div>
-            </button>`
 }
 
 function renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex){
     let pokemonSprite = document.getElementById(`pokemon-sprite-${pokemonArrayIndex}`);
     pokemonSprite.src = pokemonDetails[index].sprites.other["official-artwork"].front_default;
     pokemonSprite.style = "display: block";
-    let pokemonName = document.getElementById(`pokemon-name-${pokemonArrayIndex}`);
-    pokemonName.innerHTML += (pokemonDetails[index].name.charAt(0).toUpperCase() + pokemonDetails[index].name.slice(1));
     let pokemonTypeContainer = document.getElementById(`pokemon-type-${pokemonArrayIndex}`);
     pokemonTypeContainer.innerHTML = "";
     pokemonDetails[index].types.forEach(type => {
-        pokemonTypeContainer.innerHTML += 
-        `<span class="pokemon-type-btn">${type.type.name}</span>`;
+        pokemonTypeContainer.innerHTML += showPokemonTypeBtn(type);
         });
     pokemonDetails[index].types.forEach(type => {
         pokemonSprite.classList.add(`pokemon-type-${type.type.name}`);
         });
-    let pokemonID = document.getElementById(`pokemon-id-${pokemonArrayIndex}`);
-    pokemonID.innerHTML += pokemonDetails[index].id;
-    return pokemonDetails;   
+    renderPokemonNameID(pokemonDetails, index, pokemonArrayIndex);
 }
 
+function renderPokemonNameID(pokemonDetails, index, pokemonArrayIndex){
+    let pokemonName = document.getElementById(`pokemon-name-${pokemonArrayIndex}`);
+    pokemonName.innerHTML += (pokemonDetails[index].name.charAt(0).toUpperCase() + pokemonDetails[index].name.slice(1));
+    let pokemonID = document.getElementById(`pokemon-id-${pokemonArrayIndex}`);
+    pokemonID.innerHTML += pokemonDetails[index].id;
+    return pokemonDetails;  
+}
 
 //DIALOG
-
 
 let myDialog = document.getElementById("pokemon-dialog");
 
@@ -116,65 +103,29 @@ function openPokemonDialog(index){
     document.body.classList.add("no-scroll");
     getTemplateBigPokemonCard(index);
     renderBigPokemonCard(index);
-    
-}
-
-let dialogContent= document.getElementById("pokemon-dialog-content");
-function getTemplateBigPokemonCard(index){
-    dialogContent.innerHTML= ` <div class="close-btn-wrapper">
-                                    <button class="close-dialog-btn" onclick="closeDialog(${currentIndex})" data-id="close-dialog-button"> X </button> 
-                                </div>
-                                <div class="header-dialog"> 
-                                    <div class="pokemon-dialog-name-wrapper">
-                                        <h2 id="pokemon-dialog-name-${index}" class="pokemon-dialog-name"></h2>
-                                        <div class="pokemon-id-container">
-                                            <span id="pokemon-dialog-id-${index}" class="pokemon-id-btn big-id"></span>
-                                        </div>
-                                    </div>
-                                    </div>
-                                    <div class="second-line-pokemon-dialog">
-                                    <div class="pokemon-type pokemon-dialog-type" id="pokemon-dialog-type-${index}">
-                                    </div>
-                                </div>
-                                <div class="sprites-wrapper">
-                                        <img src="" alt="Pokemon Sprite" data-id="dialog-image" id="pokemon-dialog-sprite-${index}" class="big-pokemon-sprite-img">
-                                </div>
-                            <div class="dialog-body">
-                                <div class="table-headline">
-                                    <button onclick="showPokemonStats(${index})"><b>Stats</b></button>
-                                    <button onclick="renderPokemonAbout(${index})"><b>About</b></button>
-                                    <button onclick="showPokemonMoves(${index})"><b>Moves</b></button>
-                                </div>
-                                        <div class="stats-content" id="stats-content">
-                                            
-                                            </div>
-                                    </div>
-                            </div> 
-                            <div class="footer_dialog"> 
-                                    <button class="arrow" onclick="previousCard(${index})" data-id="prev-button">&larr;</button>
-                                    <button class="arrow" onclick="nextCard(${index})" data-id="next-button">&rarr;</button>
-                            </div>
-                            `
 }
 
 function renderBigPokemonCard(index){
     let pokemonDialogSprite = document.getElementById(`pokemon-dialog-sprite-${index}`);
     pokemonDialogSprite.src = pokemonArray[index].sprites.other["official-artwork"].front_default;
     pokemonDialogSprite.style = "display: block";
-    let pokemonDialogName = document.getElementById(`pokemon-dialog-name-${index}`);
-    pokemonDialogName.innerHTML += (pokemonArray[index].name.charAt(0).toUpperCase() + pokemonArray[index].name.slice(1));
-    let pokemonDialogTypeContainer = document.getElementById(`pokemon-dialog-type-${index}`);
-    pokemonDialogTypeContainer.innerHTML = "";
-    pokemonArray[index].types.forEach(type => {
-        pokemonDialogTypeContainer.innerHTML += 
-        `<span class="pokemon-type-btn">${type.type.name}</span>`;
-        });
     pokemonArray[index].types.forEach(type => {
         pokemonDialogSprite.classList.add(`pokemon-type-${type.type.name}`)
     });
+    let pokemonDialogName = document.getElementById(`pokemon-dialog-name-${index}`);
+    pokemonDialogName.innerHTML += (pokemonArray[index].name.charAt(0).toUpperCase() + pokemonArray[index].name.slice(1));
+    renderDialogTypeID(index);
+}
+
+function renderDialogTypeID(index){
+    let pokemonDialogTypeContainer = document.getElementById(`pokemon-dialog-type-${index}`);
+    pokemonDialogTypeContainer.innerHTML = "";
+    pokemonArray[index].types.forEach(type => {
+        pokemonDialogTypeContainer.innerHTML += showDialogTypeBtn(type);
+        });
     let pokemonDialogID = document.getElementById(`pokemon-dialog-id-${index}`);
     pokemonDialogID.innerHTML += "#" + pokemonArray[index].id;
-    showPokemonStats(index);
+    renderPokemonStats(index);
 }
   
 function closeDialog() {
@@ -197,6 +148,9 @@ let pokemonNameInput = inputField.value.toLowerCase();
         }
     let existingPokemon = pokemonArray.filter(pokemon =>//filter gibt immer Array zurück
         pokemon.name.includes(pokemonNameInput));
+    showSearchedPokemonCard();
+
+function showSearchedPokemonCard(){
     let cards = document.querySelectorAll(".small-pokemon-card");
     cards.forEach(card => card.style.display = "none"); // alle Karten einmal ausblenden
         if (existingPokemon.length > 0) {  //wenn das Array nicht leer ist, dann 
@@ -209,19 +163,23 @@ let pokemonNameInput = inputField.value.toLowerCase();
             errorMessage.style.display="block";
         }
 inputField.value = "";
+showNoPokemonFound();
+}
+
+function showNoPokemonFound(){
 setTimeout(function(){
     let errorMessage = document.getElementById("error-no-pokemon-found");
     errorMessage.style.display = "none";
     init();
  }, 3000)
-
+}
 }
 
 function showPokemonCard(index, cards){
     cards[index].style.display = "flex"; // nur die mit richtigem Index anzeigen lassen
 }
 
-function showPokemonStats(index){
+function renderPokemonStats(index){
     let statsTableContainer = document.getElementById("stats-content");
     statsTableContainer.innerHTML = "";
     statsTableContainer.classList.remove("moves-btn-container");
@@ -229,14 +187,10 @@ function showPokemonStats(index){
     let pokemonStatsArray = pokemonArray[index].stats;
     pokemonStatsArray.forEach(pokemonStat => {
         let value = pokemonStat.base_stat;
-        statsTableContainer.innerHTML += `<div class="stat-row">
-                                                <span class="stat-name">${pokemonStat.stat.name.charAt(0).toUpperCase() + pokemonStat.stat.name.slice(1)}</span>
-                                                <span class="stat-value"><b>${value}</b></span>
-                                                <div class="stat-bar-background">
-                                                    <div class="stat-bar-fill" style="width:${value}%"></div>
-                                                </div>`
+        statsTableContainer.innerHTML += showPokemonStats(pokemonStat, value);
     })  
 }
+
 function renderPokemonAbout(index){
     let pokemonAbilitiesArray = pokemonArray[index].abilities.map(
         pokemonAbility => pokemonAbility.ability.name);
@@ -252,6 +206,12 @@ function renderPokemonAbout(index){
                                                 <tr> <td> <b> Order: </b> ${pokemonArray[index].order}</td></tr>
                                                 </table>` 
 }
+
+
+/// DIESE 2 ZEILEN NOCH AUSLAGERN IN TEMPLATES"
+
+
+
 
 function showPokemonMoves(index){
     let statsTableContainer = document.getElementById("stats-content");
