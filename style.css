@@ -539,5 +539,7 @@ h2 {
     main {
         padding: 0;
     }
-
+    .moves-btn-container {
+        gap: 4px;
+    }
 }
