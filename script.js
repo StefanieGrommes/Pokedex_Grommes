@@ -45,11 +45,11 @@ function renderError(message){
 async function getDetails(responseToJson){
     let pokemonResults = responseToJson.results;
     let pokemonDetails = [];
-    const promises = pokemonResults.map(async(pokemon) => { //map erstellt ein neues Array, wo alle Daten gleichzeitig gefetched werden
+    const promises = pokemonResults.map(async(pokemon) => { 
         const pokemonResponse = await fetch (pokemon.url);
         return await pokemonResponse.json();
         });
-    pokemonDetails = await Promise.all(promises); //Promise.all wartet, bis alle promises fertig sind 
+    pokemonDetails = await Promise.all(promises); 
     renderPokemons(pokemonDetails);
     hideLoadingSpinner();
 }
@@ -60,7 +60,7 @@ function renderPokemons(pokemonDetails){
     thumbnailRef.innerHTML = "";
     }
         for (let index = 0; index < pokemonDetails.length; index++) { 
-            let pokemonArrayIndex = pokemonArray.length; //definiert globale Position im Array, beim ersten pokemon im Loop ist length 0, erst nach dem pushen ist es 1;
+            let pokemonArrayIndex = pokemonArray.length; 
             thumbnailRef.innerHTML+= getTemplateSmallPokemonCard(pokemonArrayIndex);
         renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex);
         pokemonArray.push(pokemonDetails[index]);
@@ -145,24 +145,24 @@ let pokemonNameInput = inputField.value.toLowerCase();
         alert ("Please type in at least 3 Characters");
             return;
         }
-    let existingPokemon = pokemonArray.filter(pokemon =>//filter gibt immer Array zurück
+    let existingPokemon = pokemonArray.filter(pokemon =>
         pokemon.name.includes(pokemonNameInput));
     showSearchedPokemonCard();
 
 function showSearchedPokemonCard(){
     let cards = document.querySelectorAll(".small-pokemon-card");
-    cards.forEach(card => card.style.display = "none"); // alle Karten einmal ausblenden
-        if (existingPokemon.length > 0) {  //wenn das Array nicht leer ist, dann 
-        existingPokemon.forEach(pokemon =>{  // suche den index aller pokemons im großen PokemonArray und setze ihn gleich dem Index
+    cards.forEach(card => card.style.display = "none"); 
+        if (existingPokemon.length > 0) {  
+        existingPokemon.forEach(pokemon =>{  
         let index = pokemonArray.indexOf(pokemon);
         showPokemonCard(index,cards);
             });
         } else {
             let errorMessage = document.getElementById("error-no-pokemon-found");
             errorMessage.style.display="block";
+            showNoPokemonFound();
         }
 inputField.value = "";
-showNoPokemonFound();
 }
 
 function showNoPokemonFound(){
@@ -178,7 +178,7 @@ setTimeout(function(){
 }
 
 function showPokemonCard(index, cards){
-    cards[index].style.display = "flex"; // nur die mit richtigem Index anzeigen lassen
+    cards[index].style.display = "flex"; 
 }
 
 function renderPokemonStats(index){
