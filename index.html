@@ -20,8 +20,7 @@
         </div>
         <section class="search-pokemon-section">
             <input type="text" class="input-search-pokemon" name="pokemonName" id="pokemonName" data-id="search-input" 
-                aria-label="input-field-search-pokemon" placeholder="write your Pokemon here!" minlength="3" required>
-            <button onclick="searchPokemon()" class="loading-btn" aria-label="search-pokemon-button">Load Pokemon</button>
+                aria-label="input-field-search-pokemon" placeholder="Search Pokemon" minlength="3" required oninput="searchPokemon()">
             <p id="error-no-pokemon-found" style="display:none" aria-label="error-no-pokemon-found"><b>ERROR:</b><br>No Pokemon found!</p>
         </section>
     </header>

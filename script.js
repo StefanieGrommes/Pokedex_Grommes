@@ -139,43 +139,48 @@ async function loadMorePokemons(){
 }
 
 async function searchPokemon(){
-let inputField = document.getElementById("pokemonName");
-let pokemonNameInput = inputField.value.toLowerCase();
-    if (pokemonNameInput.length < 3){
-        alert ("Please type in at least 3 Characters");
+    let inputField = document.getElementById("pokemonName");
+    let pokemonNameInput = inputField.value.toLowerCase().trim(); 
+    let cards = document.querySelectorAll(".small-pokemon-card");
+    let errorMessage = document.getElementById("error-no-pokemon-found");
+    errorMessage.style.display = "none";
+        if(pokemonNameInput.length < 3){
+            cards.forEach(card => {card.style.display = "flex";     
+            });
             return;
-        }
+        } 
+    cards.forEach(card => {card.style.display = "none";    
+        });
+    showSearchedPokemonCard(errorMessage,cards,pokemonNameInput);
+}
+
+function showSearchedPokemonCard(errorMessage,cards,pokemonNameInput){
     let existingPokemon = pokemonArray.filter(pokemon =>
         pokemon.name.includes(pokemonNameInput));
-    showSearchedPokemonCard();
-
-function showSearchedPokemonCard(){
-    let cards = document.querySelectorAll(".small-pokemon-card");
-    cards.forEach(card => card.style.display = "none"); 
-        if (existingPokemon.length > 0) {  
-        existingPokemon.forEach(pokemon =>{  
-        let index = pokemonArray.indexOf(pokemon);
-        showPokemonCard(index,cards);
-            });
-        } else {
-            let errorMessage = document.getElementById("error-no-pokemon-found");
-            errorMessage.style.display="block";
-            showNoPokemonFound();
-        }
-inputField.value = "";
+    if (existingPokemon.length > 0) {  
+    existingPokemon.forEach(pokemon =>{  
+    let index = pokemonArray.indexOf(pokemon);
+    showPokemonCard(index,cards);
+        });
+    } else {
+        errorMessage.style.display="block";
+        showNoPokemonFound();
+    }
 }
 
 function showNoPokemonFound(){
-setTimeout(function(){
-    let errorMessage = document.getElementById("error-no-pokemon-found");
-    errorMessage.style.display = "none";
-    let cards = document.querySelectorAll(".small-pokemon-card");
-        cards.forEach(card => {
-            card.style.display = "flex";
-        });
- }, 3000)
+    const loadMoreBtn = document.getElementById("loading-more-pokemons");
+    loadMoreBtn.style.display="none";
+    setTimeout(function(){
+        let errorMessage = document.getElementById("error-no-pokemon-found");
+        errorMessage.style.display = "none";
+        let cards = document.querySelectorAll(".small-pokemon-card");
+            cards.forEach(card => {
+                card.style.display = "flex";
+            });
+    }, 3000)
 }
-}
+
 
 function showPokemonCard(index, cards){
     cards[index].style.display = "flex"; 
