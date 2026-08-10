@@ -195,6 +195,10 @@ main {
     background: linear-gradient(to bottom, rgb(5, 238, 5), rgba(7, 18, 230, 0.8));
 }
 
+.back-to-start-btn{
+
+}
+
 /* ------->DIALOG------------------------------*/
 
 .pokemon-big-card {
@@ -418,6 +422,19 @@ h2 {
     margin-top: 32px;
     margin-bottom: 32px;
     background-color:rgb(165, 165, 225);
+}
+
+.back-to-start-btn {
+    display: flex;
+    justify-self: center;
+    align-items:center;
+    margin-top: 32px;
+    margin-bottom: 32px;
+    background-color:rgb(165, 165, 225);
+    font-size: 16px;
+    font-weight: 800;
+    width: 120px;
+    height: 48px;
 }
 
 /* ------->FOOTER------------------------------*/

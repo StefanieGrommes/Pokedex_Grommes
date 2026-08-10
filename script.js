@@ -175,6 +175,10 @@ async function searchPokemon(){
     showSearchedPokemonCard(errorMessage,cards,pokemonNameInput);
 }
 
+const loadMoreBtn = document.getElementById("loading-more-pokemons");
+const backToStartBtn = document.getElementById("back-to-start-btn");
+let errorMessage = document.getElementById("error-no-pokemon-found");
+
 function showSearchedPokemonCard(errorMessage,cards,pokemonNameInput){
     let existingPokemon = pokemonArray.filter(pokemon =>
         pokemon.name.includes(pokemonNameInput));
@@ -185,26 +189,40 @@ function showSearchedPokemonCard(errorMessage,cards,pokemonNameInput){
         });
     } else {
         errorMessage.style.display="block";
+        loadMoreBtn.style.visibility="hidden";
+        backToStartBtn.style.visibility="visible";
         showNoPokemonFound();
     }
 }
 
-function showNoPokemonFound(){
-    const loadMoreBtn = document.getElementById("loading-more-pokemons");
-    loadMoreBtn.style.display="none";
+function showNoPokemonFound(){ 
     setTimeout(function(){
-        let errorMessage = document.getElementById("error-no-pokemon-found");
-        errorMessage.style.display = "none";
+        errorMessage.style.display="none";
         let cards = document.querySelectorAll(".small-pokemon-card");
             cards.forEach(card => {
                 card.style.display = "flex";
+        backToStartBtn.style.visibility="hidden";
+        loadMoreBtn.style.visibility="visible";
             });
-    }, 3000)
+    }, 5000) 
 }
-
 
 function showPokemonCard(index, cards){
     cards[index].style.display = "flex"; 
+    backToStartBtn.style.visibility="visible";
+    loadMoreBtn.style.visibility="hidden";
+}
+
+function backToStart(){
+    let cards = document.querySelectorAll(".small-pokemon-card");
+            cards.forEach(card => {
+                card.style.display = "flex";
+            });
+    errorMessage.style.display="none";
+    backToStartBtn.style.visibility="hidden";
+    loadMoreBtn.style.visibility="visible";
+    let inputField = document.getElementById("pokemonName");
+    inputField.value= "";  
 }
 
 function renderPokemonStats(index){
@@ -216,7 +234,7 @@ function renderPokemonStats(index){
     pokemonStatsArray.forEach(pokemonStat => {
         let value = pokemonStat.base_stat;
         statsTableContainer.innerHTML += showPokemonStats(pokemonStat, value);
-    })  
+    });  
 }
 
 function renderPokemonAbout(index){
