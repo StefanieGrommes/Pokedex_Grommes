@@ -20,6 +20,10 @@ body {
     background-color: rgba(6, 3, 35, 0.9);
 }
 
+body.no-scroll {
+    overflow: hidden;
+}
+
 /* ------->HEADER------------------------------*/
 
 header {
@@ -404,13 +408,16 @@ h2 {
     
 }
 
-.more-pokemon-btn {
-    width: 160px;
+.loading-more-pokemon-btn {
+    font-size: 16px;
+    font-weight: 800;
+    width: 120px;
     height: 48px;
     display: flex;
     justify-self: center;
     margin-top: 32px;
     margin-bottom: 32px;
+    background-color:rgb(165, 165, 225);
 }
 
 /* ------->FOOTER------------------------------*/

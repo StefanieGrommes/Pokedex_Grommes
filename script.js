@@ -5,6 +5,8 @@ let pokemonArray = [];
 let currentIndex = 0;
 
 function init(){
+    const loadMoreBtn = document.getElementById("loading-more-pokemons");
+    loadMoreBtn.style.display="none";
     showLoadingSpinner();
     fetchData(offset);    
 }
@@ -32,7 +34,7 @@ async function fetchData(offset){
         renderError(error.message);
         return;
     }
-    getDetails(responseToJson);
+    await getDetails(responseToJson);
 }
 
 function renderError(message){
@@ -50,11 +52,13 @@ async function getDetails(responseToJson){
         return await pokemonResponse.json();
         });
     pokemonDetails = await Promise.all(promises); 
-    renderPokemons(pokemonDetails);
+    await renderPokemons(pokemonDetails);
     hideLoadingSpinner();
+    const loadMoreBtn = document.getElementById("loading-more-pokemons");
+    loadMoreBtn.style.display="flex";
 }
 
-function renderPokemons(pokemonDetails){
+async function renderPokemons(pokemonDetails){
     let thumbnailRef = document.getElementById("pokemon-thumbnails-content");
     if(offset === 0){
     thumbnailRef.innerHTML = "";
@@ -65,6 +69,20 @@ function renderPokemons(pokemonDetails){
         renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex);
         pokemonArray.push(pokemonDetails[index]);
         }
+        await waitForData();
+}
+
+async function waitForData(){
+     await Promise.all(
+        [...document.querySelectorAll(".small-pokemon-sprite-img")].map(
+            image => image.complete
+                ? Promise.resolve()
+                : new Promise(resolve => {
+                    image.onload = resolve;
+                    image.onerror = resolve;
+                })
+        )
+    );
 }
 
 function renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex){
@@ -135,7 +153,10 @@ function closeDialog() {
 
 async function loadMorePokemons(){   
     offset +=limit;
-    init();
+    const loadMoreBtn = document.getElementById("loading-more-pokemons");
+    loadMoreBtn.style.display="none";
+    showLoadingSpinner();
+    await fetchData(offset);
 }
 
 async function searchPokemon(){
