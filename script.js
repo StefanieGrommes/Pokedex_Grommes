@@ -7,18 +7,12 @@ let currentIndex = 0;
 function init(){
     const loadMoreBtn = document.getElementById("loading-more-pokemons");
     loadMoreBtn.style.display="none";
-    showLoadingSpinner();
-    fetchData(offset);    
+    fetchData(offset); 
 }
 
-function showLoadingSpinner(){
+function toggleLoadingSpinner(){
     const loadingContainer = document.getElementById("loading-container");
-    loadingContainer.style.display = "flex";
-}
-
-function hideLoadingSpinner(){
-    const loadingContainer = document.getElementById("loading-container");
-    loadingContainer.style.display = "none";
+    loadingContainer.classList.toggle("hide-loading-spinner");
 }
 
 async function fetchData(offset){ 
@@ -53,7 +47,6 @@ async function getDetails(responseToJson){
         });
     pokemonDetails = await Promise.all(promises); 
     await renderPokemons(pokemonDetails);
-    hideLoadingSpinner();
     const loadMoreBtn = document.getElementById("loading-more-pokemons");
     loadMoreBtn.style.display="flex";
 }
@@ -73,16 +66,13 @@ async function renderPokemons(pokemonDetails){
 }
 
 async function waitForData(){
-     await Promise.all(
-        [...document.querySelectorAll(".small-pokemon-sprite-img")].map(
-            image => image.complete
-                ? Promise.resolve()
-                : new Promise(resolve => {
-                    image.onload = resolve;
-                    image.onerror = resolve;
-                })
-        )
-    );
+    const images = document.querySelectorAll(".small-pokemon-sprite-img");
+    for (let i = 0; i < images.length; i++) {
+        if (!images[i].complete) {
+            await images[i].decode();
+        }
+    }
+    toggleLoadingSpinner();
 }
 
 function renderSmallPokemonCard(pokemonDetails, index, pokemonArrayIndex){
@@ -155,31 +145,29 @@ async function loadMorePokemons(){
     offset +=limit;
     const loadMoreBtn = document.getElementById("loading-more-pokemons");
     loadMoreBtn.style.display="none";
-    showLoadingSpinner();
+    toggleLoadingSpinner();
     await fetchData(offset);
 }
 
 async function searchPokemon(){
     let inputField = document.getElementById("pokemonName");
-    let pokemonNameInput = inputField.value.toLowerCase().trim(); 
     let cards = document.querySelectorAll(".small-pokemon-card");
-    let errorMessage = document.getElementById("error-no-pokemon-found");
-    errorMessage.style.display = "none";
-        if(pokemonNameInput.length < 3){
-            cards.forEach(card => {card.style.display = "flex";     
-            });
-            return;
-        } 
-    cards.forEach(card => {card.style.display = "none";    
+    let pokemonNameInput = inputField.value.toLowerCase().trim(); 
+        if (pokemonNameInput.length < 3 ) {
+        alert("Please type in at least 3 characters!");
+        return;
+        } else {
+        cards.forEach(card => {card.style.display = "none";    
         });
-    showSearchedPokemonCard(errorMessage,cards,pokemonNameInput);
+        showSearchedPokemonCard(cards,pokemonNameInput);
+        }
 }
 
 const loadMoreBtn = document.getElementById("loading-more-pokemons");
 const backToStartBtn = document.getElementById("back-to-start-btn");
 let errorMessage = document.getElementById("error-no-pokemon-found");
 
-function showSearchedPokemonCard(errorMessage,cards,pokemonNameInput){
+function showSearchedPokemonCard(cards,pokemonNameInput){
     let existingPokemon = pokemonArray.filter(pokemon =>
         pokemon.name.includes(pokemonNameInput));
     if (existingPokemon.length > 0) {  
@@ -263,20 +251,15 @@ function renderPokemonMoves(index){
         }
 }
 
- function nextCard(){ 
-    currentIndex++;
+ function changeCard(direction){ 
+    currentIndex += direction;
     if(currentIndex >= pokemonArray.length) {
         currentIndex = 0;
     }
-    renderCurrentPokemon();
-} 
-
-function previousCard(){
-    currentIndex--;
     if(currentIndex < 0) {
         currentIndex = (pokemonArray.length)-1;};
     renderCurrentPokemon();
-}
+} 
 
 function renderCurrentPokemon(){
     let dialogContent = document.getElementById("pokemon-dialog-content");

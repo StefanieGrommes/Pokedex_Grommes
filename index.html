@@ -20,7 +20,9 @@
         </div>
         <section class="search-pokemon-section">
             <input type="text" class="input-search-pokemon" name="pokemonName" id="pokemonName" data-id="search-input" 
-                aria-label="input-field-search-pokemon" placeholder="Search Pokemon" minlength="3" required oninput="searchPokemon()">
+                aria-label="input-field-search-pokemon" placeholder="Search Pokemon" minlength="3" required>
+            <button class="search-pokemon-btn" onclick="searchPokemon()">Search</button>
+            <div id="error-min-3-characters" class=""></div>
             <p id="error-no-pokemon-found" style="display:none" aria-label="error-no-pokemon-found"><b>ERROR:</b><br>No Pokemon found!</p>
         </section>
     </header>
@@ -29,7 +31,7 @@
         </div>
         <div class="pokemon-thumbnails-content" id="pokemon-thumbnails-content" aria-label="pokemon-thumbnails-content">  
         </div>
-        <div id="loading-container" class="laoding-container" aria-label="loading-container">
+        <div id="loading-container" class="loading-container" aria-label="loading-container">
             <img src="./assets/images/ekkant-loader-9342.gif" id="loading-spinner" alt="loading spinner" class="loading-spinner"></img>
         </div>
         <dialog data-id="dialog" id="pokemon-dialog" closedby="any" aria-label="pokemon-dialog">

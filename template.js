@@ -10,7 +10,7 @@ function getTemplateSmallPokemonCard(pokemonArrayIndex){
             </button>`
 }
 function showPokemonTypeBtn(type){
-    return `<span class="pokemon-type-btn" aria-label="pokemon-type-button">${type.type.name}</span>`;
+    return `<div class="pokemon-type-btn" aria-label="pokemon-type-button">${type.type.name}</div>`;
 }
 
 function showErrorMessage(message){
@@ -40,21 +40,21 @@ function getTemplateBigPokemonCard(index){
             </div>
             <div class="dialog-body" aria-label="dialog-body">
                 <div class="table-headline" aria-label="table-headline">
-                    <button onclick="renderPokemonStats(${index})" aria-label="render-pokemon-stats-button"><b>Stats</b></button>
-                    <button onclick="renderPokemonAbout(${index})" aria-label="render-pokemon-about-button"><b>About</b></button>
-                    <button onclick="renderPokemonMoves(${index})" aria-label="render-pokemon-moves-button"><b>Moves</b></button>
+                    <button onclick="renderPokemonStats(${index})" aria-label="render-pokemon-stats-button" class="render-pokemon-stats-btn"><b>Stats</b></button>
+                    <button onclick="renderPokemonAbout(${index})" aria-label="render-pokemon-about-button" class="render-pokemon-stats-btn"><b>About</b></button>
+                    <button onclick="renderPokemonMoves(${index})" aria-label="render-pokemon-moves-button" class="render-pokemon-stats-btn"><b>Moves</b></button>
                 </div>
                 <div class="stats-content" id="stats-content" aria-label="stats-content">                    
                 </div>
             </div> 
             <div class="footer-dialog" aria-label="footer-dialog"> 
-                <button class="arrow" onclick="previousCard()" data-id="prev-button" aria-label="previous-card-button">&larr;</button>
-                <button class="arrow" onclick="nextCard()" data-id="next-button" aria-label="next-card-button">&rarr;</button>
+                <button class="arrow" onclick="changeCard(-1)" data-id="prev-button" aria-label="previous-card-button">&larr;</button>
+                <button class="arrow" onclick="changeCard(1)" data-id="next-button" aria-label="next-card-button">&rarr;</button>
             </div>`
 }
 
 function showDialogTypeBtn(type){
-    return `<span class="pokemon-type-btn" aria-label="pokemon-type">${type.type.name}</span>`;
+    return `<div class="pokemon-type-btn" aria-label="pokemon-type">${type.type.name}</div>`;
 }
 
 function showPokemonStats(pokemonStat, value){
@@ -62,7 +62,7 @@ function showPokemonStats(pokemonStat, value){
                 <span class="stat-name" aria-label="stat-name">${pokemonStat.stat.name.charAt(0).toUpperCase() + pokemonStat.stat.name.slice(1)}</span>
                 <span class="stat-value" aria-label="stat-value"><b>${value}</b></span>
                 <div class="stat-bar-background" aria-label="stat-bar-background">
-                    <div class="stat-bar-fill" style="width:${value}%" aria-label="stat-bar-fill"></div>
+                    <div class="stat-bar-fill" style="width:${(value/2)}%" aria-label="stat-bar-fill"></div>
                 </div>
             </div>`
 }
