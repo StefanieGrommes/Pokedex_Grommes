@@ -102,6 +102,10 @@ function renderPokemonNameID(pokemonDetails, index, pokemonArrayIndex){
 //DIALOG
 
 let myDialog = document.getElementById("pokemon-dialog");
+myDialog.addEventListener("close", () => {
+    myDialog.classList.remove("opened");
+    document.body.classList.remove("no-scroll");
+});
 
 function openPokemonDialog(index){
     if (searchedPokemonArray){
@@ -144,10 +148,8 @@ function renderDialogTypeID(index){
     renderPokemonStats(index);
 }
   
-function closeDialog() {
+function closeDialog(){
     myDialog.close();
-    myDialog.classList.remove("opened");
-    document.body.classList.remove("no-scroll");
 }
 
 async function loadMorePokemons(){   

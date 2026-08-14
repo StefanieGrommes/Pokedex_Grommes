@@ -110,7 +110,7 @@ header {
 
 main {  
     width: 100%;
-    min-height: calc(100% - 240px);
+    min-height: calc(100dvh - 380px);
     max-width: 1920px;
     margin: 0 auto;
     box-sizing: border-box;
@@ -389,7 +389,6 @@ h2 {
     margin-top: 12px;
 }
 
-
 .table-about {
     font-size: 18px;
 }
@@ -529,7 +528,7 @@ footer {
 
 @media(max-width: 850px) {
     #pokemon-dialog {
-        width: min(70vw, 620px);
+        width: min(80vw, 700px);
     }
     #pokemon-dialog-content {
         padding: 18px 22px 18px 22px;
@@ -558,7 +557,6 @@ footer {
     .moves-btn {
         height: 28px;
     }
-
 }
 
 @media(max-width: 578px){
@@ -620,7 +618,6 @@ footer {
     }
 }
 
-
 @media(max-width: 320px){
     main {
         padding: 0;
@@ -630,6 +627,5 @@ footer {
     }
     .moves-btn {
         font-size: 16px;
-    }
-    
+    }   
 }
