@@ -179,6 +179,10 @@ function showSearchedPokemonCard(cards,pokemonNameInput){
     });
     searchedPokemonArray = pokemonArray.filter(pokemon =>
     pokemon.name.includes(pokemonNameInput));
+    proveIfPokemonexists(cards);
+}
+
+function proveIfPokemonexists(cards) {
     if (searchedPokemonArray.length > 0) { 
         searchedPokemonArray.forEach(pokemon => {
         let index = pokemonArray.indexOf(pokemon);
@@ -189,14 +193,14 @@ function showSearchedPokemonCard(cards,pokemonNameInput){
         backToStartBtn.style.visibility = "visible";
         errorMessage.style.display = "none";
     } else {
-        errorMessage.style.display="block";
-        loadMoreBtn.style.visibility="hidden";
-        backToStartBtn.style.visibility="visible";
         showNoPokemonFound();
     }
 }
 
 function showNoPokemonFound(){ 
+    errorMessage.style.display="block";
+    loadMoreBtn.style.visibility="hidden";
+    backToStartBtn.style.visibility="visible";
     setTimeout(function(){
         errorMessage.style.display="none";
         let cards = document.querySelectorAll(".small-pokemon-card");
