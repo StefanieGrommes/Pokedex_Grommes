@@ -79,6 +79,7 @@ header {
     margin-top: 12px;
     font-weight: 800;
     background-color:rgb(165, 165, 225);
+    cursor: pointer;
 }
 
 #error-no-pokemon-found {
