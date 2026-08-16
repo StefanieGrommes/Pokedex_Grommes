@@ -173,7 +173,7 @@ async function searchPokemon(){
 
 const loadMoreBtn = document.getElementById("loading-more-pokemons");
 const backToStartBtn = document.getElementById("back-to-start-btn");
-let errorMessage = document.getElementById("error-no-pokemon-found");
+let errorMessage = document.getElementById("error-no-match-found");
 
 function showSearchedPokemonCard(cards,pokemonNameInput){
     cards.forEach(card => {  

@@ -1,5 +1,5 @@
 function getTemplateSmallPokemonCard(pokemonArrayIndex){
-    return `<button onclick="openPokemonDialog(${pokemonArrayIndex})" data-id="card" id="thumbnail" class="small-pokemon-card" aria-label="open-pokemon-dialog-button">
+    return `<li> <button onclick="openPokemonDialog(${pokemonArrayIndex})" data-id="card" id="thumbnail" class="small-pokemon-card" aria-label="open-pokemon-dialog-button">
                 <h1 id="pokemon-name-${pokemonArrayIndex}" class="pokemon-name" aria-label="pokemon-name"></h1>
                 <span id="pokemon-id-${pokemonArrayIndex}" class="pokemon-id-btn" aria-label="pokemon-id-button">#</span> 
                 <div class="sprites-wrapper" id="sprites-bg-${pokemonArrayIndex}" aria-label="sprites-wrapper">
@@ -7,7 +7,8 @@ function getTemplateSmallPokemonCard(pokemonArrayIndex){
                 </div>
                 <div id="pokemon-type-${pokemonArrayIndex}" class="pokemon-type" aria-label="pokemon-type">
                 </div>
-            </button>`
+                </button>
+            </li>`
 }
 function showPokemonTypeBtn(type){
     return `<div class="pokemon-type-btn" aria-label="pokemon-type-button">${type.type.name}</div>`;
