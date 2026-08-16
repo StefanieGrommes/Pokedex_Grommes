@@ -132,12 +132,13 @@ function renderBigPokemonCard(index){
     pokemon.types.forEach(type => {
         pokemonDialogSprite.classList.add(`pokemon-type-${type.type.name}`)
     });
-    let pokemonDialogName = document.getElementById(`pokemon-dialog-name-${index}`);
-    pokemonDialogName.innerHTML += (pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1));
-    renderDialogTypeID(index);
+    renderDialogTypeIDandName(index, pokemon);
 }
 
-function renderDialogTypeID(index){
+function renderDialogTypeIDandName(index, pokemon){
+    pokemon = pokemonArray[index];
+    let pokemonDialogName = document.getElementById(`pokemon-dialog-name-${index}`);
+    pokemonDialogName.innerHTML += (pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1));
     let pokemonDialogTypeContainer = document.getElementById(`pokemon-dialog-type-${index}`);
     pokemonDialogTypeContainer.innerHTML = "";
     pokemonArray[index].types.forEach(type => {
@@ -176,19 +177,20 @@ const backToStartBtn = document.getElementById("back-to-start-btn");
 let errorMessage = document.getElementById("error-no-match-found");
 
 function showSearchedPokemonCard(cards,pokemonNameInput){
-    cards.forEach(card => {  
-        card.style.display = "none";
-    });
     searchedPokemonArray = pokemonArray.filter(pokemon =>
     pokemon.name.includes(pokemonNameInput));
-    proveIfPokemonexists(cards);
+    const listItems = document.querySelectorAll("#pokemon-thumbnails-content > li");
+    listItems.forEach (li => {
+        li.style.display = "none";
+        });
+    proveIfPokemonexists(listItems);
 }
 
-function proveIfPokemonexists(cards) {
+function proveIfPokemonexists(listItems) {
     if (searchedPokemonArray.length > 0) { 
         searchedPokemonArray.forEach(pokemon => {
-        let index = pokemonArray.indexOf(pokemon);
-        cards[index].style.display = "flex";
+        const index = pokemonArray.indexOf(pokemon);
+        listItems[index].style.display = "flex";
         });
         currentIndex = 0;
         loadMoreBtn.style.visibility = "hidden";
@@ -215,9 +217,9 @@ function showNoPokemonFound(){
 }
 
 function backToStart(){
-    let cards = document.querySelectorAll(".small-pokemon-card");
-            cards.forEach(card => {
-                card.style.display = "flex";
+    const listItems = document.querySelectorAll( "#pokemon-thumbnails-content > li");
+            listItems.forEach(li => {
+                li.style.display = "flex";
             });
     errorMessage.style.display="none";
     backToStartBtn.style.visibility="hidden";
