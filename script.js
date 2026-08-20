@@ -226,7 +226,7 @@ function backToStart(){
     loadMoreBtn.style.visibility="visible";
     let inputField = document.getElementById("pokemonName");
     inputField.value= "";  
-    searchedPokemonArray = null;
+    searchedPokemonArray = null; // nur wenn ich das Array af null setze, ist die length 0 
     currentIndex = 0;
 }
 
